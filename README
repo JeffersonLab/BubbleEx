@@ -42,9 +42,6 @@ $Id: README 49035 2011-03-31 10:21:28Z gcosmo $
  
  See HistoManager constructor
     
- Note that, by default, histograms are disabled. To activate them, uncomment
- the flag G4ANALYSIS_USE in GNUmakefile, *before* compilation.
-   
  Please install ROOT before enable histograming. 
  http://root.cern.ch
   

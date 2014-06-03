@@ -32,11 +32,9 @@
 #include "HistoManager.hh"
 #include "G4UnitsTable.hh"
 
-#ifdef G4ANALYSIS_USE
 #include "TH1D.h"
 #include "TFile.h"
 #include "TTree.h"
-#endif
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -57,17 +55,13 @@ HistoManager::HistoManager()
 
 HistoManager::~HistoManager()
 {
-#ifdef G4ANALYSIS_USE  
-    if ( rootFile ) delete rootFile;
-#endif    
+  if ( rootFile ) delete rootFile;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void HistoManager::book()
-{ 
-#ifdef G4ANALYSIS_USE
- 
+{
  // Creating a tree container to handle histograms and ntuples.
  // This tree is associated to an output file.
  //
@@ -79,7 +73,7 @@ void HistoManager::book()
           << G4endl;
    return;
  }
-   
+
  histo[1] = new TH1D("1", "Edep in radiator", 150, 0., 15*MeV);
  if (!histo[1]) G4cout << "\n can't create histo 1" << G4endl;
  histo[2] = new TH1D("2", "Edep in dump", 150, 0., 15*MeV);
@@ -87,7 +81,7 @@ void HistoManager::book()
  histo[3] = new TH1D("3", "trackL in radiator", 100, 0., 10*cm);
  if (!histo[3]) G4cout << "\n can't create histo 3" << G4endl;
  histo[4] = new TH1D("4", "trackL in dump", 100, 0., 10*cm);
- if (!histo[4]) G4cout << "\n can't create histo 4" << G4endl;  
+ if (!histo[4]) G4cout << "\n can't create histo 4" << G4endl;
 
  // create 1 ntuple in subdirectory "tuples"
  //
@@ -124,21 +118,18 @@ void HistoManager::book()
  histo[13] = new TH1D("13", "Electron Phi", 100, -1.0, 1.0*radian);
  if (!histo[13]) G4cout << "\n can't create histo 13" << G4endl;
 
-G4cout << "\n----> Histogram file is opened in " << fileName << G4endl;
-#endif
+ G4cout << "\n----> Histogram file is opened in " << fileName << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void HistoManager::save()
-{ 
-#ifdef G4ANALYSIS_USE
+{
   if (rootFile) {
     rootFile->Write();       // Writing the histograms to the file
     rootFile->Close();        // and closing the tree (and the file)
     G4cout << "\n----> Histogram Tree is saved \n" << G4endl;
   }
-#endif
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -151,9 +142,7 @@ void HistoManager::FillHisto(G4int ih, G4double xbin, G4double weight)
 	   << G4endl;
     return;
   }
-#ifdef G4ANALYSIS_USE
- if  (histo[ih]) { histo[ih]->Fill(xbin, weight); }
-#endif
+  if  (histo[ih]) { histo[ih]->Fill(xbin, weight); }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -165,9 +154,7 @@ void HistoManager::Normalize(G4int ih, G4double fac)
            << " does not exist. (fac=" << fac << ")" << G4endl;
     return;
   }
-#ifdef G4ANALYSIS_USE
-   if (histo[ih]) histo[ih]->Scale(fac);
-#endif
+  if (histo[ih]) histo[ih]->Scale(fac);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -175,39 +162,35 @@ void HistoManager::Normalize(G4int ih, G4double fac)
 void HistoManager::FillNtuple(G4double EnergyRad, G4double EnergyDump,
                               G4double TrackLRad , G4double TrackLDump )
 {
- Erad = EnergyRad;
- Edump = EnergyDump;
- Lrad = TrackLRad;
- Ldump = TrackLDump;
+  Erad = EnergyRad;
+  Edump = EnergyDump;
+  Lrad = TrackLRad;
+  Ldump = TrackLDump;
 
-#ifdef G4ANALYSIS_USE
   if (ntupl) ntupl->Fill();
-#endif
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void HistoManager::PrintStatistic()
 {
-#ifdef G4ANALYSIS_USE
   if(histo[1]) {
     G4cout << "\n ----> print histograms statistic \n" << G4endl;
-    
-    G4cout 
+
+    G4cout
     << " ERad : mean = " << G4BestUnit(histo[1]->GetMean(), "Energy") 
             << " rms = " << G4BestUnit(histo[1]->GetRMS(),  "Energy") << G4endl;
-    G4cout 	       
+    G4cout
     << " EDump : mean = " << G4BestUnit(histo[2]->GetMean(), "Energy") 
             << " rms = " << G4BestUnit(histo[2]->GetRMS(),  "Energy") << G4endl;
-    G4cout 
+    G4cout
     << " LRad : mean = " << G4BestUnit(histo[3]->GetMean(), "Length") 
             << " rms = " << G4BestUnit(histo[3]->GetRMS(),  "Length") << G4endl;
-    G4cout 
+    G4cout
     << " LDump : mean = " << G4BestUnit(histo[4]->GetMean(), "Length") 
             << " rms = " << G4BestUnit(histo[4]->GetRMS(),  "Length") << G4endl;
 
   }
-#endif
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -218,9 +201,7 @@ void HistoManager::FillgNtuple(G4double EnergyGamma, G4double ThetaGamma,
   gTheta = ThetaGamma;
   gPhi = PhiGamma;
 
-#ifdef G4ANALYSIS_USE
   if (gntupl) gntupl->Fill();
-#endif
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -232,31 +213,27 @@ void HistoManager::FilleNtuple(G4double EnergyElectron, G4double KinEnergyElectr
   eKinEnergy = KinEnergyElectron;
   eTheta = ThetaElectron;
   ePhi = PhiElectron;
-  
-#ifdef G4ANALYSIS_USE
+
   if (entupl) entupl->Fill();
-#endif
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void HistoManager::PrintgStatistic()
 {
-#ifdef G4ANALYSIS_USE
   if(histo[6]) {
     G4cout << "\n ----> print histograms statistic \n" << G4endl;
-    
-    G4cout 
+
+    G4cout
     << " gEnergy : mean = " << G4BestUnit(histo[6]->GetMean(), "Energy") 
             << " rms = " << G4BestUnit(histo[6]->GetRMS(),  "Energy") << G4endl;
-    G4cout 	       
+    G4cout
     << " gTheta : mean = " << G4BestUnit(histo[7]->GetMean(), "Theta") 
             << " rms = " << G4BestUnit(histo[7]->GetRMS(),  "Theta") << G4endl;
-    G4cout 
+    G4cout
     << " gPhi : mean = " << G4BestUnit(histo[8]->GetMean(), "Phi") 
             << " rms = " << G4BestUnit(histo[8]->GetRMS(),  "Phi") << G4endl;
   }
-#endif
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
