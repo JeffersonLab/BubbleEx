@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+<!--
+/***********************************************************
+Programmer: Darren Getts
+Purpose:
+
+ File to compile the different daughter geometries for bubble chamber. Used mollerMother.gdml file from remoll simulation as template.
+
+*********************************************************/ -->
+
+<!-- -->
+<!-- -->
+
+<define>
+     <position name="Center" x="0" y="0" z="0"/>
+         <rotation name="identity"/>
+
+<quantity name="MotherBox_Length" 
+      type="length" 
+      value = "4000"                   
+      unit = "mm" />
+
+</define>
+
+<materials>
+     <material Z="1" name="Vacuum" state="gas">
+       <T unit="K" value="2.73"/>
+       <P unit="pascal" value="3e-18"/>
+       <D unit="g/cm3" value="1e-25"/>
+       <atom unit="g/mole" value="1.01"/>
+     </material>
+</materials>
+
+<!-- Define the mother solid, a box to put everything in -->
+
+<solids>
+
+     <box name="MotherBox" 
+x="MotherBox_Length" 
+y="MotherBox_Length" 
+z="MotherBox_Length"/>
+
+</solids>
+
+<!-- Define the structure -->
+
+  <structure>
+
+    <volume name="logicChamberMother">
+      <materialref ref="Vacuum"/>
+      <solidref ref="MotherBox"/>
+
+<!-- -->
+<!-- -->
+<!-- Linking files CuPortVolume.gdml (contains the copper ports along beamline in chamber), BubbleChamberShell.gdml (shell of chamber), and BubbleChamberComponents.gdml (includes other compnents, flanges, plugs, bubble, liquid in the bubble, bubble base) 
+
+All positions should be set to origin since they were all taken into account in the child files. -->
+
+<!-- !!!! check to see that paths are correct after implementing, currently have them set to be placed in folder geometry !!!!!!! -->
+
+      <physvol>
+      <file name="geometry/BubbleChamberShell.gdml"/>
+      <positionref ref="Center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+      <file name="geometry/BubbleChamberComponents.gdml"/>
+      <positionref ref="Center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+      <file name="geometry/CuPortVolume.gdml"/>
+      <positionref ref="Center"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      
+    </volume>
+
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="logicChamberMother"/>
+  </setup>
+
+</gdml>
