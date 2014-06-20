@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdml[
+<!ENTITY materials SYSTEM "materials.gdml">
+]>
+
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+      <!-- include GDML namespace -->
+      <!-- XML Schema instance Namespace -->
+      <!-- GDML Schema Location -->
+
+<!--
+/***********************************************************
+Programmer: Darren Getts
+Purpose:
+
+To define the Cu in port on the Bubble Chamber 
+
+Uses the HMolPolHTargetVolume.gdml by Valerie as guide
+
+Entry Conditions:
+Date:05-17-2013
+Modified: 06-19-2013
+Assisted By: Wouter Deconinck
+*********************************************************/
+-->
+
+  <define>
+    
+    <!-- constants for this file -->
+    
+    <constant name = "TWOPI" value = "2.*pi"/>
+
+<!-- logical volume dimensions, box -->
+
+<quantity name="CuP_dimensions" 
+      type="length" 
+      value = "200" 
+      unit = "mm" />
+  
+    
+<!-- Cu port (in) with striaght cylinder as base -->
+    
+    <!-- Minimum radius of the Cu cylinder -->
+    <quantity name="CuPort_MinRadius" 
+      type="length" 
+      value = "5.334" 
+      unit = "mm" />
+  
+    <!-- Maximum radius of the Cu cylinder --> 
+       <quantity name="CuPort_MaxRadius" 
+      type="length" 
+      value = "9.525"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu cylinder (z component so half length) -->
+    	<quantity name="CuPort_Length" 
+      type="length" 
+      value = "50.8"                   
+      unit = "mm" />
+  
+    <!-- Starting Phi angle of the Cu cylinder -->
+    <quantity name="CuPort_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/>
+    
+    <!-- Ending Phi angle of the Cu cylinder -->
+    <quantity name="CuPort_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>
+    
+    <!-- End of Base Cu cylinder -->
+    
+    <!-- Max radius of the inner beam line cavity in copper port. Not sure if this is required-->
+    <quantity name="in_port_air_MaxRadius" 
+      value = "CuPort_MinRadius" />
+  
+    <!-- Min radius of the inner beam line cavity in copper port -->
+    <quantity name="in_port_air_MinRadius" 
+      type="length" 
+      value = "0" 
+      unit = "mm" />
+    
+    <!-- larger cylinder mount -->
+ 
+    <!-- Minimum radius of the Cu Cylinder Mount -->
+    <quantity name="CuPortMount_MinRadius" 
+      type="length" 
+      value = "CuPort_MaxRadius" 
+      unit = "mm" />
+  
+    <!-- Maximum radius of the Cu Cylinder Mount --> 
+       <quantity name="CuPortMount_MaxRadius" 
+      type="length" 
+      value = "31.75"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu Cylinder Mount (z component so half length) -->
+    	<quantity name="CuPortMount_Length" 
+      type="length" 
+      value = "6.35"                   
+      unit = "mm" />
+
+
+	<!-- Minimum radius of the Cu Cylinder Cu end -->
+    <quantity name="CuPortEnd_MinRadius" 
+      type="length" 
+      value = "0" 
+      unit = "mm" />
+  
+    <!-- Maximum radius of the Cu Cylinder Cu end --> 
+       <quantity name="CuPortEnd_MaxRadius" 
+      type="length" 
+      value = "9.525"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu Cylinder Cu end (z component so half length) -->
+    	<quantity name="CuPortEnd_Length" 
+      type="length" 
+      value = "1.5875"                   
+      unit = "mm" />
+	
+<!-- Cu end of port -->
+
+<!-- !!!!!!!  define positions the ports related to the origin in bubble block, this way we should be able to solve the rotations and positions here !!!!!!!!!!!!!!!!!!!!! -->
+    
+<position name="block_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="mm"/>	
+	
+<!-- !!!!!! postions relative to origin in block frame -->	
+
+	<position name="CuPortTubeIn_Position" 
+      x="76.041"
+      y="0.0" 
+      z="-76.2" 
+      unit="mm"/>
+
+<position name="CuPortTubeOut_Position" 
+      x="76.041"
+      y="0.0" 
+      z="76.2" 
+      unit="mm"/>
+
+	<position name="CuPortMountIn_Position" 
+      x="76.041"
+      y="0.0" 
+      z="-95.25" 
+      unit="mm"/>
+
+<position name="CuPortMountOut_Position" 
+      x="76.041"
+      y="0.0" 
+      z="95.25" 
+      unit="mm"/>
+
+<position name="CuPortEndIn_Position" 
+      x="76.041"
+      y="0.0" 
+      z="-23.8125" 
+      unit="mm"/>
+<position name="CuPortEndOut_Position" 
+      x="76.041"
+      y="0.0" 
+      z="23.8125" 
+      unit="mm"/>
+
+<position name="center"/>
+
+ <rotation name="identity"/> 
+
+  </define>
+
+  <!-- -->
+<!-- -->
+<!-- -->
+
+<!-- define materials here - this with the ENTITY up top pass the materials 
+      from the materials.gdml file
+??????? is the &materials; below required?  -->
+  <!-- <materials> -->
+&materials;
+
+<materials>
+     <material Z="1" name="Vacuum" state="gas">
+       <T unit="K" value="2.73"/>
+       <P unit="pascal" value="3e-18"/>
+       <D unit="g/cm3" value="1e-25"/>
+       <atom unit="g/mole" value="1.01"/>
+     </material>
+</materials>
+
+<!-- -->
+<!-- -->
+<!-- -->
+
+  <solids>
+
+    <!-- Define logical solid to contain physical volumes in this case a box -->
+
+<box name="CuPort_box" 
+		x="CuP_dimensions" 
+		y="CuP_dimensions" 
+		z="CuP_dimensions"/>
+
+<!-- Define all solids for physical volumes -->
+
+<!-- Define Cu port on Bubble Chamber -->
+    <tube name="CuPort_tube" 
+      rmin="CuPort_MinRadius" 
+      rmax="CuPort_MaxRadius"
+      z="CuPort_Length" 
+      startphi="CuPort_StartPhi" 
+      deltaphi="CuPort_EndPhi"/> 
+  
+    <!-- Define the inner beam line cavity in copper port (note: could have used subtract command too) -->
+    <tube name="in_port_air_tube" 
+      rmin="in_port_air_MinRadius" 
+      rmax="in_port_air_MaxRadius"
+      z="CuPort_Length" 
+      startphi="CuPort_StartPhi" 
+      deltaphi="CuPort_EndPhi"/>   
+
+<!-- Define the copper port mount cylinder -->
+    <tube name="CuPortMount_tube" 
+      rmin="CuPortMount_MinRadius" 
+      rmax="CuPortMount_MaxRadius"
+      z="CuPortMount_Length" 
+      startphi="CuPort_StartPhi" 
+      deltaphi="CuPort_EndPhi"/>   
+
+<!-- Define the inner beam line cavity in copper port -->
+    <tube name="CuPortend_tube" 
+      rmin="CuPortEnd_MinRadius" 
+      rmax="CuPortEnd_MaxRadius"
+      z="CuPortEnd_Length" 
+      startphi="CuPort_StartPhi" 
+      deltaphi="CuPort_EndPhi"/>   
+
+  </solids>
+
+  <structure>
+  <!-- implement the geometry - define all geometry, then define logical volume and designate the rest as physical volumes  -->
+
+
+    <!-- Define the port -->
+    <volume name="CuPortBase"> 
+      <materialref ref="G4_Cu"/>
+      <solidref ref="CuPort_tube"/>
+      <auxiliary auxtype="Color" auxvalue="green"/>
+<!-- Not sure what the auxtype alpha is opaqueness?  -->    
+ 	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+    </volume>
+  
+    <!-- inner volume (fixed)(check if this structure is correct)(fixed) -->
+    <volume name="in_port_air">
+      <materialref ref="G4_Air"/>
+      <solidref ref="in_port_air_tube"/>
+    </volume>
+
+<!-- Cu Port Mount -->
+    <volume name="CuPortMount">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="CuPortMount_tube"/>
+	<auxiliary auxtype="Color" auxvalue="green"/>
+ 	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+    </volume>
+
+<!-- Cu end cap  -->
+    <volume name="CuPortEnd">
+      <materialref ref="G4_Cu"/>
+      <solidref ref="CuPortEnd_tube"/>
+<auxiliary auxtype="Color" auxvalue="green"/>
+ 	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+    </volume>
+
+<!-- Define the logical volumes -->
+<!-- Define the logical volumes --> 
+ <volume name="logicCuPorts">
+      <materialref ref="Vacuum"/>
+      <solidref ref="CuPort_box"/>
+
+
+ <!-- Define the physical volumes (from above) to be included and their positions -->
+      
+	<physvol>
+        <volumeref ref="CuPortBase"/>
+        <positionref ref="CuPortOut_Position"/>
+      </physvol>
+
+<physvol>
+        <volumeref ref="CuPortBase"/>
+        <positionref ref="CuPortIn_Position"/>
+      </physvol>
+
+<physvol>
+        <volumeref ref="in_port_air"/>
+        <positionref ref="CuPortIn_Position"/>
+      </physvol> 
+
+<physvol>
+        <volumeref ref="in_port_air"/>
+        <positionref ref="CuPortOut_Position"/>
+      </physvol> 
+
+<physvol>
+        <volumeref ref="CuPortMount"/>
+        <positionref ref="CuPortMountOut_Position"/>
+      </physvol>
+
+<physvol>
+        <volumeref ref="CuPortMount"/>
+        <positionref ref="CuPortMountIn_Position"/>
+      </physvol>
+
+<physvol>
+        <volumeref ref="CuPortEnd"/>
+        <positionref ref="CuPortEndOut_Position"/>
+      </physvol>
+
+<physvol>
+        <volumeref ref="CuPortEnd"/>
+        <positionref ref="CuPortEndIn_Position"/>
+      </physvol>
+
+    </volume>
+
+
+  </structure>
+
+
+  <!-- (Fixed) FIx this !!!!!!!!!!!! End Need to create CuPortSetup ref (Fixed) -->
+
+  <setup name="CuPortSetup" version="1.0">
+    <world ref="logicCuPorts"/>
+  </setup>
+
+</gdml>
