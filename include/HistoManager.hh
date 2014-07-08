@@ -1,33 +1,18 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-// $Id: HistoManager.hh 48195 2011-02-02 15:33:39Z jjacquem $
-// GEANT4 tag $Name: geant4-09-04 $
-//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//  
+//  last updated 707/07/2014 11:10:13 PM 
+//  by darren
+//.....
+// this is one of the three sets ( .cc , .hh) of files which we need the correct names for the 
+// detectors to be right inorder for correct histogram output.
+// these files are used to run, track, and record the particle interactions desired. 
+// The stepping file is also used to set perameters in these three sets if needed.
+//
+// This histomanager set here sets up the output of the events recorded into root histogramss
+//
+// values which we need to be careful of for output are used here such as EnergyRad.
+// need to make sure they point to the correct geometry since it was hardcoded to read the g4 geometry
 
 #ifndef HistoManager_h
 #define HistoManager_h 1
@@ -52,6 +37,7 @@ class HistoManager
    ~HistoManager();
    
     void book();
+
     void save();
 
     void FillHisto(G4int id, G4double bin, G4double weight = 1.0);
@@ -99,4 +85,3 @@ class HistoManager
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
