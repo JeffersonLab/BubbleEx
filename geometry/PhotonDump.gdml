@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+<!--
+/***********************************************************
+updated 7/3
+
+Programmer: Darren
+Purpose:
+
+To define the PhotonDump in the BubbleEx simulation.
+
+need to correct geometry and values to true structure
+*********************************************************/
+-->
+ <define>
+
+    <constant name = "TWOPI" value = "2.*pi"/>
+
+    <!-- length of pipe -->
+    <quantity name="PhotonDump_Length" 
+      value = "40.0" 
+      unit = "cm" />
+
+    <!-- radius min and max of pipe -->
+    <quantity name="PhotonDump_Rmin" 
+      value = "0" 
+      unit = "cm" />
+    <quantity name="PhotonDump_Rmax" 
+      value = "10.0" 
+      unit = "cm" />
+      
+    <!-- starting and ending phi angles -->
+    <quantity name="PhotonDump_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/> 
+    <quantity name="PhotonDump_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>     
+    
+    <!-- define positions of the target in this file, not world -->
+    <position name="PhotonDump_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="cm"/>
+
+  </define>
+  
+  <materials>
+ <!-- Al --> 
+    <material Z="13" name="Aluminum" state="solid">
+      <MEE unit="eV" value="166"/>
+      <D unit="g/cm3" value="2.699"/>
+      <atom unit="g/mole" value="26.9815"/>
+    </material>
+  </materials> 
+
+  <solids>
+    <!-- Define the pipe solid -->
+    	<tube name="PhotonDump_tube" 
+      		rmin="PhotonDump_Rmin" 
+      		rmax="PhotonDump_Rmax"
+      		z="PhotonDump_Length" 
+      		startphi="PhotonDump_StartPhi" 
+      		deltaphi="PhotonDump_EndPhi"/>    
+
+  </solids>
+  
+   <structure>
+<!-- might need a seperate logical volume -->
+
+    <volume name="PhotonDumpVol"> 
+      <materialref ref="Aluminum"/>
+      <solidref ref="PhotonDump_tube"/>
+     	<auxiliary auxtype="Color" auxvalue="red"/>
+    </volume>
+
+  </structure>
+
+
+  <setup name="Default" version="1.0">
+    <world ref="PhotonDumpVol"/>
+  </setup>
+
+</gdml>
+  
