@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+<!--
+/***********************************************************
+updated 7/3
+
+Programmer: Darren
+Purpose:
+
+To define the PhotonCollimator in the BubbleEx simulation.
+
+need correct geometry and values, this is just a temp plain cylinder of approximate dimensions. True collimator has slightly more complex geometry, (center is tappered cone) see wiki or step file if we ever get one. also update pos in world after.
+*********************************************************/
+-->
+ <define>
+
+    <constant name = "TWOPI" value = "2.*pi"/>
+
+    <!-- length of pipe -->
+    <quantity name="PhotonCollimator_Length" 
+      value = "152.40" 
+      unit = "mm" />
+
+    <!-- radius min and max of pipe -->
+    <quantity name="PhotonCollimator_Rmin" 
+      value = "5.16" 
+      unit = "mm" />
+    <quantity name="PhotonCollimator_Rmax" 
+      value = "50.0" 
+      unit = "mm" />
+      
+    <!-- starting and ending phi angles -->
+    <quantity name="PhotonCollimator_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/> 
+    <quantity name="PhotonCollimator_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>     
+    
+    <!-- define positions of the target in this file, not world -->
+    <position name="PhotonCollimator_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="cm"/>
+
+  </define>
+  
+  <materials>
+<!-- Cu -->
+    <isotope N="63" Z="29" name="Cu63_29">
+      <atom unit="g/mole" value="62.9296"/>
+    </isotope>
+    <isotope N="65" Z="29" name="Cu65_29">
+      <atom unit="g/mole" value="64.9278"/>
+    </isotope>
+    <element name="Cu">
+      <fraction n="0.6917" ref="Cu63_29"/>
+      <fraction n="0.3083" ref="Cu65_29"/>
+    </element>
+    <material name="Copper" state="solid">
+      <MEE unit="eV" value="322"/>
+      <D unit="g/cm3" value="8.96"/>
+      <fraction n="1" ref="Cu"/>
+    </material>
+  </materials>  
+
+  <solids>
+    <!-- Define the pipe solid -->
+    	<tube name="PhotonCollimator_tube" 
+      		rmin="PhotonCollimator_Rmin" 
+      		rmax="PhotonCollimator_Rmax"
+      		z="PhotonCollimator_Length" 
+      		startphi="PhotonCollimator_StartPhi" 
+      		deltaphi="PhotonCollimator_EndPhi"/>    
+
+  </solids>
+  
+   <structure>
+<!-- might need a seperate logical volume -->
+
+    <volume name="PhotonCollimatorVol"> 
+      <materialref ref="Copper"/>
+      <solidref ref="PhotonCollimator_tube"/>
+     	<auxiliary auxtype="Color" auxvalue="green"/>
+   </volume>
+
+  </structure>
+
+
+  <setup name="Default" version="1.0">
+    <world ref="PhotonCollimatorVol"/>
+  </setup>
+
+</gdml>
+  
