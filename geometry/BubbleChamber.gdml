@@ -1,0 +1,1129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+
+<!--
+/***********************************************************
+version 7/3
+
+updated structure of volumes so they are combined as units instead of individual
+ parts of whole object. for instance Cu mount is now one phys vol. adding aux 
+ properties as well.
+
+Programmer: Darren
+Purpose:
+
+To define the Bubble Chamber and all of its components: Al block, Bubble, 
+Flanges, Plugs, Bubble Base, Cu Ports, and mounts.
+ 
+*****Check to make sure this is Al, in step file it is listed as steel but 
+Riad wants all Al I thought*****
+
+Uses the HMolPolHTargetVolume.gdml by Valerie, remoll simulation, gdml and 
+geant4 user manual as guides
+
+Combined the individual files into one to avoid the overlapping and to make 
+it easier to combine with the other objects (coming soon) along the beam line 
+into a mother volume.
+
+!!! note materials have been corrected and input here !!!!!
+
+*********************************************************/
+-->
+
+<!-- -->
+<!-- -->
+
+
+  <define>
+
+    	<!-- Constants are Defined here -->
+    
+    	<constant name = "TWOPI" value = "2.*pi"/>
+	<constant name="HALFPI" value="pi/2."/>
+ 	<constant name="PI" value="1.*pi"/>
+ 	<constant name="ThreeHalfPI" value="3.*pi/2."/>
+
+	<!-- Quantities such as length and angle for solids are Defined here -->
+
+<!-- lengths for logical volume dimensions, box -->
+
+	<quantity name="logicalVol_ZY" 
+	      type="length" 
+	      value = "355.7" 
+	      unit = "cm" />
+
+      <quantity name="logicalVol_X" 
+	      type="length" 
+	      value = "431.9" 
+	      unit = "cm" />
+
+<!-- Defining physical volume dimensions -->
+
+<!-- Al block created by subtracting tubes from center should give us 
+the correct shape for the Al shell -->
+
+
+ <!-- Al block -->
+	
+    <quantity name="AlBlock_X" 
+      type="length" 
+      value = "406.4" 
+      unit = "mm" />
+  
+    <quantity name="AlBlock_Y" 
+      type="length" 
+      value = "304.8"                   
+      unit = "mm" />
+    
+    <quantity name="AlBlock_Z" 
+      type="length" 
+      value = "304.8"                   
+      unit = "mm" />
+ 
+<!-- Tubes for removing ports and center of Al block -->
+ <!-- the horizantal tube have same dimensions, vertical is different -->
+ <!-- AirT(axis along) -->
+
+ <!-- Minimum and max of the radius of the air tubes -->
+    <quantity name="AirT_MinRadius" 
+      type="length" 
+      value = "0" 
+      unit = "mm" />
+  
+    <quantity name="AirT_MaxRadius" 
+      type="length" 
+      value = "73.0"                   
+      unit = "mm" />
+    
+<!-- Length of the AirTZ and AirTY cylinders,  -->
+    	<quantity name="AirTZ_Length" 
+      type="length" 
+      value = "304.9"                   
+      unit = "mm" />
+  
+
+<!-- Length of the AirTX cylinder -->
+    	<quantity name="AirTX_Length" 
+      type="length" 
+      value = "406.5"                   
+      unit = "mm" />
+
+
+    <!-- Starting and ending Phi angle of the Air cylinders -->
+    <quantity name="AirT_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/>
+    
+    <quantity name="AirT_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>
+
+<!-- Insert from component file follows -->
+
+<!-- Flanges will be tubes where most quantities are the same so will reuse 
+but add a rotate command -->
+ 
+	
+ <!-- Min and max for flange(outer part) and back plug radius  -->
+    	<quantity name="BeamFlange_MinRadius" 
+      		type="length" 
+      		value = "10.2" 
+      		unit = "mm" />
+
+	<quantity name="CameraFlange_MinRadius" 
+      		type="length" 
+      		value = "44.6" 
+      		unit = "mm" />
+  
+	<quantity name="TopFlange_MinRadius" 
+      		type="length" 
+     		value = "0.0" 
+      		unit = "mm" />
+
+   	<quantity name="Flange_MaxRadius" 
+      		type="length" 
+      		value = "127.0"                   
+      		unit = "mm" />
+
+	<quantity name="Plug_MaxRadius" 
+    		type="length" 
+      		value = "73.0"                   
+      		unit = "mm" />
+    
+  <!-- length in Z for flange and plugs  -->
+
+	<quantity name="Flange_Z_Length" 
+     		type="length" 
+      		value = "25.4"                   
+      		unit = "mm" />
+  
+	<quantity name="Plug_Z_Length" 
+      		type="length" 
+      		value = "50.8"                   
+      		unit = "mm" />
+
+    <!-- Define the starting and ending Phi angle(all are the same) -->
+    	<quantity name="Flange_StartPhi" 
+      		type="angle" 
+      		value = "0" 
+      		unit = "rad"/>
+    
+    	<quantity name="Flange_EndPhi" 
+      		type="angle" 
+      		value = "TWOPI" 
+      		unit = "rad"/>
+
+ <!-- end flanges-->
+
+<!-- Bubble (cartesian lengths halved), can also reuse some quantities 
+from flanges -->
+ <!-- -->
+ <!-- c2 -->
+	<quantity name="BubbleCylinderTop_Z_Length" 
+      		type="length" 
+      		value = "44.6"                   
+      		unit = "mm" />
+  
+ <!-- c1 -->
+	<quantity name="BubbleCylinderBottom_Z_Length" 
+      		type="length" 
+      		value = "19.0"                   
+      		unit = "mm" />
+
+	<quantity name="BubbleBase_Z_Length" 
+      		type="length" 
+      		value = "12.7"                   
+      		unit = "mm" />
+
+	<quantity name="BubbleBase_MaxRadius" 
+      		type="length" 
+      		value = "34.7"                   
+      		unit = "mm" />
+
+	<quantity name="BubbleTop_MinRadius" 
+      		type="length" 
+      		value = "18.0"                   
+      		unit = "mm" />
+
+	<quantity name="BubbleTop_MaxRadius" 
+      		type="length" 
+      		value = "19.1"                   
+      		unit = "mm" />
+
+	<quantity name="Bubble_EndPhi" 
+      		type="angle" 
+      		value = "PI" 
+      		unit = "rad"/>
+
+	<quantity name="Bubble_StartPhi" 
+      		type="angle" 
+      		value = "-HALFPI" 
+      		unit = "rad"/>
+
+    	<quantity name="Bubble_EndTheta" 
+      		type="angle" 
+      		value = "PI" 
+      		unit = "rad"/>
+
+	<quantity name="Bubble_StartTheta" 
+      		type="angle" 
+      		value = "0" 
+      		unit = "rad"/>
+ <!-- end bubble-->
+
+ <!-- end component file insert -->
+
+<!-- Cu port (in) with striaght cylinder as base -->
+    
+    <!-- Minimum radius of the Cu cylinder -->
+    <quantity name="CuPort_MinRadius" 
+      type="length" 
+      value = "5.3" 
+      unit = "mm" />
+  
+    <!-- Maximum min radius of the Cu cylinder --> 
+       <quantity name="CuPort_MaxRadius" 
+      type="length" 
+      value = "10.0"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu cylinder  -->
+    	<quantity name="CuPort_Length" 
+      type="length" 
+      value = "101.6"                   
+      unit = "mm" />
+  
+    <!-- Starting Phi angle of the Cu cylinder -->
+    <quantity name="CuPort_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/>
+    
+    <!-- Ending Phi angle of the Cu cylinder -->
+    <quantity name="CuPort_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>
+    
+    <!-- End of Base Cu cylinder -->
+    
+    <!-- dont need unless need to define material here. Max radius of the inner beam line cavity in copper port. Not sure if this is required
+
+    <quantity name="in_port_air_MaxRadius" 
+      value = "CuPort_MinRadius" />
+  
+       <quantity name="in_port_air_MinRadius" 
+      type="length" 
+      value = "0" 
+      unit = "mm" />
+    -->
+    <!-- larger cylinder mount -->
+ 
+    <!-- Minimum radius of the Cu Cylinder Mount -->
+    <quantity name="CuPortMount_MinRadius" 
+      type="length" 
+      value = "CuPort_MaxRadius" 
+      unit = "mm" />
+  
+    <!-- Maximum radius of the Cu Cylinder Mount --> 
+       <quantity name="CuPortMount_MaxRadius" 
+      type="length" 
+      value = "31.8"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu Cylinder Mount -->
+    	<quantity name="CuPortMount_Length" 
+      type="length" 
+      value = "12.7"                   
+      unit = "mm" />
+
+
+	<!-- Minimum radius of the Cu Cylinder Cu end -->
+    <quantity name="CuPortEnd_MinRadius" 
+      type="length" 
+      value = "0" 
+      unit = "mm" />
+  
+    <!-- Maximum radius of the Cu Cylinder Cu end --> 
+       <quantity name="CuPortEnd_MaxRadius" 
+      type="length" 
+      value = "10.0"                   
+      unit = "mm" />
+    
+    <!-- Length of the Cu Cylinder Cu end (z component so half length) -->
+    	<quantity name="CuPortEnd_Length" 
+      type="length" 
+      value = "3.2"                   
+      unit = "mm" />
+	
+<!-- Cu end of port -->
+
+<!-- positions -->
+
+<!-- positions of the target in this file -->
+    
+	<position name="center"/>
+
+	<position name="AlBlock_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="mm"/>
+    
+	<position name="AirTZ_Position" 
+      x="76.3"
+      y="0.0" 
+      z="0.0" 
+      unit="mm"/>
+
+	<position name="Block_Position" 
+      		x="0.0"
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+ <!-- Flange Positions -->
+  <!-- Entrance positions -->  
+	<position name="EntranceFlange_Position" 
+      		x="76.3"
+      		y="0.0" 
+      		z="-165.1" 
+      		unit="mm"/>
+
+	<position name="EntrancePlug_Position" 
+      		x="76.3"
+      		y="0.0" 
+      		z="-127" 
+      		unit="mm"/>
+
+ <!-- Exit positions -->  
+	<position name="ExitFlange_Position" 
+      		x="76.3"
+      		y="0.0" 
+      		z="165.1" 
+      		unit="mm"/>
+
+	<position name="ExitPlug_Position" 
+      		x="76.3"
+      		y="0.0" 
+      		z="127" 
+      		unit="mm"/>
+
+ <!-- Side positions -->  
+	<position name="CameraFlange_Position" 
+      		x="76.3"
+      		y="165.1" 
+      		z="0" 
+      		unit="mm"/>
+
+	<position name="CameraPlug_Position" 
+      		x="76.3"
+      		y="127" 
+      		z="0" 
+      		unit="mm"/>
+
+	<position name="TopFlange_Position" 
+      		x="215.9"
+      		y="0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="TopPlug_Position" 
+      		x="177.8"      		
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="SideFlange_Position" 
+      		x="76.3"
+      		y="-165.1" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="SidePlug_Position" 
+      		x="76.3"
+      		y="-127" 
+      		z="0.0" 
+      		unit="mm"/>
+
+ <!-- end flange and plug positions -->
+
+ <!-- Bubble positions -->
+
+	<position name="BubbleBase_Position" 
+      		x="16.8"
+      		y="0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="BubbleC1_Position" 
+      		x="32.6"
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="BubbleTop_Position" 
+      		x="86.7"
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="UnionBubble_Position" 
+      		x="-22.3"
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+ 
+<!-- End Bubble positions -->
+
+<!-- start cuport positions -->
+
+<position name="block_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="mm"/>	
+	
+<!-- !!!!!! postions relative to origin in block frame -->	
+
+	<position name="Mount_Position" 
+	      x="0.0"
+	      y="0.0" 
+	      z="19.1" 
+	      unit="mm"/>
+	<position name="EndPort_Position" 
+	      x="0.0"
+	      y="0.0" 
+	      z="-52.4" 
+	      unit="mm"/>
+
+	<position name="CuPortIn_Position" 
+	      x="76.3"
+	      y="0.0" 
+	      z="-76.2" 
+	      unit="mm"/>
+
+	<position name="CuPortOut_Position" 
+	      x="76.3"
+	      y="0.0" 
+	      z="76.2" 
+	      unit="mm"/>
+
+<!-- rotations to align flanges with proper axis -->
+<!-- rotate around the x axis by halfpi, similairy for y -->
+
+ 	<rotation name="identity"/> 
+	<rotation name="rotateonXCamera" x="HALFPI"/>
+ 	<rotation name="rotateonXSide" x="ThreeHalfPI"/>  
+	<rotation name="rotateonYTop" y="HALFPI"/> 
+	<rotation name="rotateXpi" x="PI"/>
+
+
+<!-- rotations which will be used to subtract out the tubes -->
+<!-- rotate AirTZ around the x axis by halfpi, similairy for AirTX -->
+
+ 	<rotation name="identity"/> 
+	<rotation name="rotateAirTZ" x="HALFPI"/>
+ 	<rotation name="rotateAirTX" y="HALFPI"/>  
+
+</define>
+
+<!-- -->
+<!-- Materials -->
+<!-- the values below for our materials are not even close to being correct just used arbitrary values as explained in intro, need to fixxxxxxxx -->
+
+
+  <materials>
+ <!-- Al --> 
+    <material Z="13" name="Aluminum" state="solid">
+      <MEE unit="eV" value="166"/>
+      <D unit="g/cm3" value="2.699"/>
+      <atom unit="g/mole" value="26.9815"/>
+    </material>
+<!-- Cu -->
+    <isotope N="63" Z="29" name="Cu63_29">
+      <atom unit="g/mole" value="62.9296"/>
+    </isotope>
+    <isotope N="65" Z="29" name="Cu65_29">
+      <atom unit="g/mole" value="64.9278"/>
+    </isotope>
+    <element name="Cu">
+      <fraction n="0.6917" ref="Cu63_29"/>
+      <fraction n="0.3083" ref="Cu65_29"/>
+    </element>
+    <material name="Copper" state="solid">
+      <MEE unit="eV" value="322"/>
+      <D unit="g/cm3" value="8.96"/>
+      <fraction n="1" ref="Cu"/>
+    </material>
+<!-- Galactic, was set as material of bubble in original example, why? -->
+    <isotope N="1" Z="1" name="H1_1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2_1">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1_1"/>
+      <fraction n="0.000115" ref="H2_1"/>
+    </element>
+    <material name="Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+<!-- Air -->
+    <isotope N="14" Z="7" name="N140x19d6f20">
+      <atom unit="g/mole" value="14.0031"/>
+    </isotope>
+    <isotope N="15" Z="7" name="N150x19d7370">
+      <atom unit="g/mole" value="15.0001"/>
+    </isotope>
+    <element name="N">
+      <fraction n="0.99632" ref="N140x19d6f20"/>
+      <fraction n="0.00368" ref="N150x19d7370"/>
+    </element>
+    
+    <isotope N="16" Z="8" name="O160x23329a0">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O170x2332a30">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O180x2332ac0">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O160x23329a0"/>
+      <fraction n="0.00038" ref="O170x2332a30"/>
+      <fraction n="0.00205" ref="O180x2332ac0"/>
+    </element>
+
+    <material name="Air" state="gas">
+      <MEE unit="eV" value="85.7030667332999"/>
+      <D unit="g/cm3" value="0.00129"/>
+      <fraction n="0.7" ref="N"/>
+      <fraction n="0.3" ref="O"/>
+    </material>
+
+<!-- Glass, not the exact kind of glass, probably need to change, pulled from G4_glass_plate -->
+
+    <isotope N="23" Z="11" name="Na230x2334870">
+      <atom unit="g/mole" value="22.9898"/>
+    </isotope>
+
+    <isotope N="28" Z="14" name="Si280x2335fe0">
+      <atom unit="g/mole" value="27.9769"/>
+    </isotope>
+    <isotope N="29" Z="14" name="Si290x2334040">
+      <atom unit="g/mole" value="28.9765"/>
+    </isotope>
+    <isotope N="30" Z="14" name="Si300x2336160">
+      <atom unit="g/mole" value="29.9738"/>
+    </isotope>
+
+    <isotope N="40" Z="20" name="Ca400x2336420">
+      <atom unit="g/mole" value="39.9626"/>
+    </isotope>
+    <isotope N="42" Z="20" name="Ca420x23364b0">
+      <atom unit="g/mole" value="41.9586"/>
+    </isotope>
+    <isotope N="43" Z="20" name="Ca430x2336540">
+      <atom unit="g/mole" value="42.9588"/>
+    </isotope>
+    <isotope N="44" Z="20" name="Ca440x23365e0">
+      <atom unit="g/mole" value="43.9555"/>
+    </isotope>
+    <isotope N="46" Z="20" name="Ca460x2336650">
+      <atom unit="g/mole" value="45.9537"/>
+    </isotope>
+    <isotope N="48" Z="20" name="Ca480x2336690">
+      <atom unit="g/mole" value="47.9525"/>
+    </isotope>
+
+    <element name="Na">
+      <fraction n="1" ref="Na230x2334870"/>
+    </element>
+    <element name="Si">
+      <fraction n="0.922296077703922" ref="Si280x2335fe0"/>
+      <fraction n="0.0468319531680468" ref="Si290x2334040"/>
+      <fraction n="0.0308719691280309" ref="Si300x2336160"/>
+    </element>
+    <element name="Ca">
+      <fraction n="0.96941" ref="Ca400x2336420"/>
+      <fraction n="0.00647" ref="Ca420x23364b0"/>
+      <fraction n="0.00135" ref="Ca430x2336540"/>
+      <fraction n="0.02086" ref="Ca440x23365e0"/>
+      <fraction n="4e-05" ref="Ca460x2336650"/>
+      <fraction n="0.00187" ref="Ca480x2336690"/>
+    </element>
+    <material name="Glass" state="solid">
+      <MEE unit="eV" value="145.4"/>
+      <D unit="g/cm3" value="2.4"/>
+      <fraction n="0.45980045980046" ref="O"/>
+      <fraction n="0.0964410964410964" ref="Na"/>
+      <fraction n="0.336553336553337" ref="Si"/>
+      <fraction n="0.107205107205107" ref="Ca"/>
+    </material>
+
+<!-- SuperHeatLiquid -->
+
+    <material name="Nitrous_Oxide" state="gas">
+      <MEE unit="eV" value="84.9"/>
+      <D unit="g/cm3" value="0.00183094"/>
+      <fraction n="0.636483" ref="N"/>
+      <fraction n="0.363517" ref="O"/>
+    </material>
+
+    <material Z="54" name="SuperHeatLiquid" state="gas">
+      <T unit="K" value="268.15"/>
+      <P unit="pascal" value="6079500"/>
+      <MEE unit="eV" value="84.9"/>
+      <D unit="g/cm3" value="0.846"/>
+      <fraction n="1" ref="Nitrous_Oxide"/>
+    </material>
+
+<!-- Water -->
+
+    <material name="Water" state="solid">
+      <MEE unit="eV" value="78"/>
+      <D unit="g/cm3" value="1"/>
+      <fraction n="0.111898477841067" ref="H"/>
+      <fraction n="0.888101522158933" ref="O"/>
+    </material>
+
+  </materials>
+ 
+<!-- -->
+<!-- -->
+<!-- -->
+
+<!-- Solids are defined and created here -->
+
+<solids>
+
+
+<!-- Define the logical volume contanier -->
+
+	<box name="logicalVol_solid" 
+		x="logicalVol_X" 
+		y="logicalVol_ZY" 
+		z="logicalVol_ZY"/>
+
+
+<!-- Define the physical volumes -->
+<!-- Define the Al block -->
+	<box name="AlBlock" 
+		x="AlBlock_X" 
+		y="AlBlock_Y" 
+		z="AlBlock_Z"/>
+
+    <!-- Define the tube AirTZ -->
+    	<tube name="AirTZ_tube" 
+      		rmin="AirT_MinRadius" 
+      		rmax="AirT_MaxRadius"
+     		 z="AirTZ_Length" 
+      		startphi="AirT_StartPhi" 
+      		deltaphi="AirT_EndPhi"/> 
+  
+    <!-- Define the tube AirTX -->
+    	<tube name="AirTX_tube" 
+      		rmin="AirT_MinRadius" 
+      		rmax="AirT_MaxRadius"
+      		z="AirTX_Length" 
+      		startphi="AirT_StartPhi" 
+      		deltaphi="AirT_EndPhi"/>    
+
+
+ <!-- making new solids by mixing the solids already defined above other mixing commands available such as intersection, union --> 
+
+	<subtraction name="sub1AlBlock">
+   		<first ref="AlBlock"/> <second ref="AirTZ_tube"/>
+   		<positionref ref="AirTZ_Position"/> <rotationref 			ref="identity"/>
+ 	</subtraction>
+
+	<subtraction name="sub2AlBlock">
+   		<first ref="sub1AlBlock"/> <second ref="AirTZ_tube"/>
+   		<positionref ref="AirTZ_Position"/> <rotationref 			ref="rotateAirTZ"/>
+  	</subtraction>
+
+	<subtraction name="AlShell_solid">
+   		<first ref="sub2AlBlock"/> <second ref="AirTX_tube"/>
+   		<positionref ref="AlBlock_Position"/> <rotationref 			ref="rotateAirTX"/>
+  	</subtraction>
+
+<!-- end block solids -->
+
+<!-- Define the Flanges and plugs-->
+
+<!-- entrance and exit here are the same, one will just be rotated later -->	
+    <tube name="BeamFlange_tube" 
+      rmin="BeamFlange_MinRadius" 
+      rmax="Flange_MaxRadius"
+      z="Flange_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/> 
+  
+    <tube name="BeamPlug_tube" 
+      rmin="BeamFlange_MinRadius" 
+      rmax="Plug_MaxRadius"
+      z="Plug_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/> 
+
+<!-- side flanges and plugs -->
+    <tube name="SideFlange_tube" 
+      rmin="CameraFlange_MinRadius" 
+      rmax="Flange_MaxRadius"
+      z="Flange_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/>    
+
+    <tube name="SidePlug_tube" 
+      rmin="CameraFlange_MinRadius" 
+      rmax="Plug_MaxRadius"
+      z="Plug_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/> 
+
+<!-- Top flanges and plugs -->
+    <tube name="TopFlange_tube" 
+      rmin="TopFlange_MinRadius" 
+      rmax="Flange_MaxRadius"
+      z="Flange_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/>    
+
+<tube name="TopPlug_tube" 
+      rmin="TopFlange_MinRadius" 
+      rmax="Plug_MaxRadius"
+      z="Plug_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/> 
+
+    <!-- Define the Bubble chamber -->
+    
+<!-- Define the BubbleBase tube -->
+    <tube name="BubbleBase_tube" 
+      rmin="BubbleTop_MinRadius" 
+      rmax="BubbleBase_MaxRadius"
+      z="BubbleBase_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/> 
+  
+    <!-- Define BubbleC1 bottom cylinder part top of the base -->
+    <tube name="BubbleC1_tube" 
+      rmin="BubbleTop_MinRadius" 
+      rmax="BubbleTop_MaxRadius"
+      z="BubbleCylinderBottom_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/>    
+
+<!-- Define BubbleC2 top portion with N2O cylinder -->
+    <tube name="BubbleC2_tube" 
+      rmin="BubbleTop_MinRadius" 
+      rmax="BubbleTop_MaxRadius"
+      z="BubbleCylinderTop_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/>    
+
+    <tube name="BubbleC2Inside_tube" 
+      rmin="0" 
+      rmax="BubbleTop_MinRadius"
+      z="BubbleCylinderTop_Z_Length" 
+      startphi="Flange_StartPhi" 
+      deltaphi="Flange_EndPhi"/>
+
+<!-- Define the Sphere on Top -->
+	<sphere name="BubbleTop_Sphere" 
+		rmin="BubbleTop_MinRadius" 
+      		rmax="BubbleTop_MaxRadius"
+      		startphi="Bubble_StartPhi" 
+      		deltaphi="Bubble_EndPhi"     
+		starttheta="Bubble_StartTheta" 
+		deltatheta="Bubble_EndTheta"/>
+
+	<sphere name="BubbleTopInside_Sphere" 
+		rmin="0" 
+      		rmax="BubbleTop_MinRadius"
+      		startphi="Bubble_StartPhi" 
+      		deltaphi="Bubble_EndPhi"     
+		starttheta="Bubble_StartTheta" 
+		deltatheta="Bubble_EndTheta"/>
+
+<!-- Define the union of the bubble -->
+
+<union name="BubbleGlass_solid">
+<first ref="BubbleTop_Sphere"/> <second ref="BubbleC2_tube"/>
+<positionref ref="UnionBubble_Position"/> <rotationref ref="rotateonYTop"/>
+</union>
+
+<union name="BubbleInside_solid">
+<first ref="BubbleTopInside_Sphere"/> <second ref="BubbleC2Inside_tube"/>
+<positionref ref="UnionBubble_Position"/> <rotationref ref="rotateonYTop"/>
+</union>
+
+	<!-- Define Cu port on Bubble Chamber -->
+	    <tube name="CuPort_tube" 
+	      rmin="CuPort_MinRadius" 
+	      rmax="CuPort_MaxRadius"
+	      z="CuPort_Length" 
+	      startphi="CuPort_StartPhi" 
+	      deltaphi="CuPort_EndPhi"/> 
+	  
+	<!-- Define the copper port mount cylinder -->
+	    <tube name="CuPortMount_tube" 
+	      rmin="CuPortMount_MinRadius" 
+	      rmax="CuPortMount_MaxRadius"
+	      z="CuPortMount_Length" 
+	      startphi="CuPort_StartPhi" 
+	      deltaphi="CuPort_EndPhi"/>   
+
+	<!-- Define the end in copper port -->
+	    <tube name="CuPortEnd_tube" 
+	      rmin="CuPortEnd_MinRadius" 
+	      rmax="CuPortEnd_MaxRadius"
+	      z="CuPortEnd_Length" 
+	      startphi="CuPort_StartPhi" 
+	      deltaphi="CuPort_EndPhi"/> 	
+
+<!-- Define the union of the Cu ports -->
+
+<union name="CuPort1_solid">
+<first ref="CuPort_tube"/> <second ref="CuPortMount_tube"/>
+<positionref ref="Mount_Position"/> 
+</union>
+
+<union name="CuPort_solid">
+<first ref="CuPort1_solid"/> <second ref="CuPortEnd_tube"/>
+<positionref ref="EndPort_Position"/>
+</union>
+
+
+	</solids>
+
+  <structure>
+  
+<!-- Define structure. combines everything we have so far. physical 
+volumes are put into logical volumes with positions, rotations..  -->
+
+	    <!-- Define the physical volumes -->
+	    <volume name="AlShell"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="AlShell_solid"/>
+	      <auxiliary auxtype="Color" auxvalue="grey"/>
+	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	    </volume>
+ 
+<!-- Start component volumes -->
+
+<!-- Beamline -->
+    	<volume name="BeamFlange"> 
+      		<materialref ref="Aluminum"/>
+      		<solidref ref="BeamFlange_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
+    	</volume>
+ 
+	<volume name="BeamPlug"> 
+	      	<materialref ref="Aluminum"/>
+	      	<solidref ref="BeamPlug_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
+    	</volume>
+
+<!-- Sides -->
+	<volume name="SideFlange"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="SideFlange_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
+    	</volume>
+ 
+	<volume name="SidePlug"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="SidePlug_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
+	    </volume>
+
+<!-- top -->
+	<volume name="TopFlange"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="TopFlange_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
+	    </volume>
+ 
+	<volume name="TopPlug"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="TopPlug_tube"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
+    	</volume>
+
+<!-- end flange and plug volume def -->
+
+<!-- Define bubble volume def -->
+
+	<volume name="BubbleBase"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="BubbleBase_tube"/>
+	      <auxiliary auxtype="Color" auxvalue="black"/>
+	    	</volume>
+ 
+	<volume name="BubbleC1"> 
+	      <materialref ref="Aluminum"/>
+	      <solidref ref="BubbleC1_tube"/>
+	      <auxiliary auxtype="Color" auxvalue="black"/>
+    	</volume>
+
+	<volume name="BubbleInsideVol"> 
+	      <materialref ref="SuperHeatLiquid"/>
+	      <solidref ref="BubbleInside_solid"/>
+	      <auxiliary auxtype="Color" auxvalue="cyan"/>
+	      <auxiliary auxtype="Alpha" auxvalue="0.8"/>
+	    </volume>
+	    
+	<volume name="BubbleGlassVol"> 
+	      <materialref ref="Glass"/>
+	      <solidref ref="BubbleGlass_solid"/>
+	      <auxiliary auxtype="Color" auxvalue="white"/>
+	      <auxiliary auxtype="Alpha" auxvalue="0.2"/>
+    	</volume>
+    	
+  <!-- Cuport volumes -->
+   <!-- Define the port -->
+    <volume name="CuPortBaseVol"> 
+      <materialref ref="Copper"/>
+      <solidref ref="CuPort_solid"/>
+      <auxiliary auxtype="Color" auxvalue="yellow"/>
+    </volume>
+  
+
+<!-- --> 
+<!-- --> 
+<!-- Define the logical volumes --> 
+ <volume name="BubbleChamberVol">
+      <materialref ref="Air"/>
+      <solidref ref="logicalVol_solid"/>
+
+
+ <!-- Define the physical volumes -->
+      <physvol name="BCShell">
+        <volumeref ref="AlShell"/>
+        <positionref ref="center"/>
+      </physvol>
+
+ <!-- component physical volumes -->
+
+<!-- Bubble --> 
+
+      <physvol name="Bubble">
+        <volumeref ref="BubbleInsideVol"/>
+        <positionref ref="BubbleTop_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+      <physvol name="BubbleGlass">
+        <volumeref ref="BubbleGlassVol"/>
+        <positionref ref="BubbleTop_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+	<physvol name="BubbleSupport">
+        <volumeref ref="BubbleC1"/>
+        <positionref ref="BubbleC1_Position"/>
+      <rotationref ref="rotateonYTop"/>
+      </physvol>
+
+      <physvol name="BubbleBase">
+        <volumeref ref="BubbleBase"/>
+        <positionref ref="BubbleBase_Position"/>
+      <rotationref ref="rotateonYTop"/>
+      </physvol>
+
+<!-- End Bubble --> 
+
+<!-- Flanges and Plugs --> 
+ <!-- Entrance physical volume (along Z so no rotation needed) -->
+      <physvol name="FlangeBeamEntrance">
+        <volumeref ref="BeamFlange"/>
+        <positionref ref="EntranceFlange_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+	<physvol name="PlugBeamEntrance">
+        <volumeref ref="BeamPlug"/>
+        <positionref ref="EntrancePlug_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+
+<!-- Exit physical volume (along Z so no rotation needed) -->
+      <physvol name="FlangeBeamExit">
+        <volumeref ref="BeamFlange"/>
+        <positionref ref="ExitFlange_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+	<physvol name="PlugBeamExit">
+        <volumeref ref="BeamPlug"/>
+        <positionref ref="ExitPlug_Position"/>
+      <rotationref ref="identity"/>
+      </physvol>
+
+<!-- Camera physical volume (rotation needed 1/2 pi around x axis) -->
+      <physvol name="FlangeCameraSide">
+        <volumeref ref="SideFlange"/>
+        <positionref ref="CameraFlange_Position"/>
+      <rotationref ref="rotateonXCamera"/>
+      </physvol>
+
+	<physvol name="PlugCameraSide">
+        <volumeref ref="SidePlug"/>
+        <positionref ref="CameraPlug_Position"/>
+      <rotationref ref="rotateonXCamera"/>
+      </physvol>
+
+<!-- Side (opposite Camera) physical volume (rotation needed 3/2 pi around x axis) -->
+      <physvol name="FlangeLeftSide">
+        <volumeref ref="SideFlange"/>
+        <positionref ref="SideFlange_Position"/>
+      <rotationref ref="rotateonXSide"/>
+      </physvol>
+
+	<physvol name="PlugLeftSide">
+        <volumeref ref="SidePlug"/>
+        <positionref ref="SidePlug_Position"/>
+      <rotationref ref="rotateonXSide"/>
+      </physvol>
+
+<!-- Camera physical volume (rotation needed 1/2 pi around x axis) -->
+      <physvol name="FlangeTop">
+        <volumeref ref="TopFlange"/>
+        <positionref ref="TopFlange_Position"/>
+      <rotationref ref="rotateonYTop"/>
+      </physvol>
+
+	<physvol name="PlugTop">
+        <volumeref ref="TopPlug"/>
+        <positionref ref="TopPlug_Position"/>
+      <rotationref ref="rotateonYTop"/>
+      </physvol>
+
+<!-- End of Flanges and Plugs physical volumes --> 
+
+
+ <!-- cuport physical volumes -->
+
+<physvol name="CuPortExit">
+        <volumeref ref="CuPortBaseVol"/>
+        <positionref ref="CuPortOut_Position"/>
+      </physvol>
+
+<physvol name="CuPortEntrance">
+        <volumeref ref="CuPortBaseVol"/>
+        <positionref ref="CuPortIn_Position"/> 
+        <rotationref ref="rotateXpi"/>
+      </physvol>
+
+<!-- end physical volumes -->
+      	<auxiliary auxtype="Visibility" auxvalue="hide"/>
+    </volume>
+
+
+  </structure>
+  <!-- Connects this to mother files or world file by giving world ref to this file i.e. gives the logical volume  -->
+  
+	<setup name="Default" version="1.0">
+    		<world ref="BubbleChamberVol"/>
+ 	 	</setup>
+
+</gdml>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
