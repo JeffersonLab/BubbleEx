@@ -5,7 +5,8 @@
 //  by darren
 //
 // messenger allows for managing communication between the classes. on the 
-// header not much has changed except removing and adding pointers
+// header not much has changed except removing and adding pointers. update when 
+// sweep magnet and edump are created if commands are needed.
 //
 // 
 //
