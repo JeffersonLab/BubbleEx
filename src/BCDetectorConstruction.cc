@@ -1,7 +1,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //  
-//  last updated 707/07/2014 11:10:13 PM 
+//  last updated 7/8/2014 11:00:52 PM  
 //  by darren
 //
 // Constructs the Detector('s). Here we set the gdml parser to read the gdml 
@@ -9,14 +9,17 @@
 // , photondump have been removed and put into gdml along with the other 
 // geometry.
 //
-// The file originally seemed if it had been modified from a EM G4 example and 
-// had different abilities commented out. These have all been taken out for the 
-// most part. Mainly because for them to work now they would have to be adjusted
-// to fit with gdml reading. If needed these can be recreated but so that they
+// The sweep magnet and edump need to be created in gdml. the geometry was 
+// commented out and not being used. the commands and functions were removed
+// mainly because for them to work now they would have to be adjusted
+// to fit with gdml reading. when needed these can be recreated but so that they
 // are functional with the gdml geometry.
 // most of what was available were commands to adjust setting such as lenght, 
-// material of geometry. If needed we can also setup the write command to work
+// material of geometry, set magnetic field and other properties.
+// If needed we can also setup the write command to work
 // with these so that G4 writes the gdml after adjustment.
+// old code we may need is still at the bottom of file, needs to  be adjusted
+// for new geometry to work.
 //
 // The modifications to the files generally follow from the G4 examples G01-4.
 // Other sources which seem to have followed these examples are remoll and 
@@ -319,4 +322,112 @@ void BCDetectorConstruction::SetReadFile( const G4String& str )
 {
   fReadFile= str;
  }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// can reimplement define materials inorder to make changing material easier in
+// gui if needed other wise if nist manager for gdml works can use it.
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+//void DetectorConstruction::DefineMaterials()
+//{ 
+//// use G4-NIST materials data base
+////
+//G4NistManager* man = G4NistManager::Instance();
+//defaultMaterial = man->FindOrBuildMaterial("G4_Galactic");
+//man->FindOrBuildMaterial("G4_Cu");
+//man->FindOrBuildMaterial("G4_Al");
+//man->FindOrBuildMaterial("G4_WATER");
+//man->FindOrBuildMaterial("G4_AIR");
+//man->FindOrBuildMaterial("G4_NITROUS_OXIDE");
+
+//// define gas material at non STP conditions (density=0.846g/cm3, T=-5 C (268.15 K), P=60 atm)
+// G4double density = 0.846*g/cm3;
+// SuperHeatLiquid = 
+//   man->BuildMaterialWithNewDensity("SuperHeatLiquid","G4_NITROUS_OXIDE",density,268.15*kelvin,60.0*atmosphere);
+
+//// print table
+////
+//G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+//}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// code that needs to be reintegrated with correct gdml file and bindings to work
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+  //     
+  // Sweep Magnet
+  //
+  // solidSweepMagnet=0; logicSweepMagnet=0; physiSweepMagnet=0; 
+ 
+  // solidSweepMagnet = new G4Box("SweepMagnet",				//its name
+  //                  SweepMagnetSizeX/2,SweepMagnetSizeY/2,SweepMagnetSizeZ/2);	//its size
+                         
+  // logicSweepMagnet = new G4LogicalVolume(solidSweepMagnet,
+  // 				  SweepMagnetMaterial,
+  // 				  SweepMagnetMaterial->GetName());
+  
+  // G4ThreeVector positionSweepMagnet = G4ThreeVector(0.,0.SweepMagnetZpos);
+  // G4Transform3D transformSweepMagnet = G4Transform3D(Ra,positionSweepMagnet);
+
+  // physiSweepMagnet = new G4PVPlacement(transformSweepMagnet, //rotation, position
+  // 				logicSweepMagnet,               //its logical volume
+  // 				SweepMagnetMaterial->GetName(), //its name
+  // 				logicWorld,             //its mother
+  // 				false,                  //no boulean operation
+  // 				0);                     //copy number
+  
+  //                                 
+  // Electron Dump
+  //
+  // solidElectronDump=0; logicElectronDump=0; physiElectronDump=0; 
+  
+  // solidElectronDump = new G4Tubs("ElectronDump",
+  // 				 innerRadiusOfElectronDump, 
+  // 				 outerRadiusOfElectronDump,
+  // 				 ElectronDumpThickness/2,
+  // 				 startAngleOfElectronDump, 
+  // 				 spanningAngleOfElectronDump);
+  
+  // logicElectronDump = new G4LogicalVolume(solidElectronDump,
+  // 				  ElectronDumpMaterial,
+  // 				  ElectronDumpMaterial->GetName());
+  
+  
+  // G4ThreeVector positionElectronDump = G4ThreeVector(0.,ElectronDumpYpos,ElectronDumpZpos);
+  // G4Transform3D transformElectronDump = G4Transform3D(Rd,positionElectronDump);
+
+  // physiElectronDump = new G4PVPlacement(transformElectronDump, //rotation, position
+  // 				logicElectronDump,               //its logical volume
+  // 				ElectronDumpMaterial->GetName(), //its name
+  // 				logicWorld,             //its mother
+  // 				false,                  //no boulean operation
+  // 				0);                     //copy number
+
+//void DetectorConstruction::SetMagField(G4double fieldValue)
+//{
+//  //apply a global uniform magnetic field along Z axis
+//  // we have it set for detector not global
+//  // G4FieldManager* fieldMgr
+//  //   = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+
+//  //apply a local uniform magnetic field along Z axis
+//  G4FieldManager* fieldMgr = new G4FieldManager(magField);
+//  
+//  if(magField) delete magField;		//delete the existing magn field
+//  
+//  if(fieldValue!=0.)			// create a new one if non nul
+//    { magField = new G4UniformMagField(G4ThreeVector(0.,0.,fieldValue));
+//      fieldMgr->SetDetectorField(magField);
+//      fieldMgr->CreateChordFinder(magField);
+//      
+//      // Set magnetic field in Sweep Magnet and its daughters:
+//      G4bool allLocal = true ;
+//      //      logicSweepMagnet->SetFieldManager(fieldMgr, allLocal) ;
+//      //
+
+//    } else {
+//    magField = 0;
+//    fieldMgr->SetDetectorField(magField);
+//  }
+//}
 
