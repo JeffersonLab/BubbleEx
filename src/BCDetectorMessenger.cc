@@ -6,7 +6,7 @@
 //
 // define the messenger here. removed the commands for changes in gui to objects
 // as mentioned can recreate so that they will function with the new gdml geo
-// but they were originally commented out and didnt seem to be used
+// but they were originally commented out.
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -34,7 +34,7 @@ BCDetectorMessenger::BCDetectorMessenger( BCDetectorConstruction* Det )
   detDir = new G4UIdirectory("/Bubble/det/");
   detDir->SetGuidance("detector control");
 
-// for updating geo and mag field 
+// for updating geo and mag field will need if use the updated commands from before
 //  UpdateCmd = new G4UIcmdWithoutParameter("/Bubble/det/update",this);
 //  UpdateCmd->SetGuidance("Update geometry.");
 //  UpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
