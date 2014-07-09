@@ -16,6 +16,8 @@ to do:
 
 some geometry hasnt been set to correct values or shape do to not having information. still waiting for step file. the radiator, collimator, beamline, and dump need to be adjusted.
 
+need tp add sweep magnet and electron dump, update positions when those gdml files have been created
+
 *********************************************************/ -->
 
 <!-- -->
