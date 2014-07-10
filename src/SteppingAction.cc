@@ -1,48 +1,70 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-// $Id: SteppingAction.cc 48195 2011-02-02 15:33:39Z jjacquem $
-// GEANT4 tag $Name: geant4-09-04 $
-//
-// 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//  
+//  last updated 707/07/2014 11:10:13 PM 
+//  by darren
+// 
+// The stepping file is to set perameters in the eventaction and histomanager 
+// sets if needed.
+//
+// *** here is were we have the link between our geometry and the event tracking
+// output.
+// this means our geometry needs to be pointed to with correct names in order 
+// for the eventaction, runaction, histomanager
+// files to work properly. once define here as long as the pointer here is 
+// the same the other 3 set of files dont need to 
+// be changed.
+//
+// line 40 starts the point where the volume names are linked to the 
+// detectorconstruction.hh file
+//
+// GetBubble() GetRadiator() GetElectronDump() are all referenced here.
+// specifiying the names of the physical volumes in gdml g4 reuses those names.
+// otherwise have to use aux with sensedetector or something to make sure 
+// binding is correct.
+//
+// kept same pv names Radiator, Bubble, and ElectronDump (which hasnt been made)
+// what is ElectronDump geometry?
+//
+// GetVolume() gets volumes from gdml now, until gdml file is loaded g4 doesnt 
+// radiator is volume so set pointer. only physical volumes we want need to be
+// pointed to. other events should track all.
+//
+////....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "SteppingAction.hh"
 
-#include "DetectorConstruction.hh"
+#include "BCDetectorConstruction.hh"
 #include "EventAction.hh"
 #include "HistoManager.hh"
 
 #include "G4Step.hh"
 #include "G4UnitsTable.hh"
+#include "G4GDMLParser.hh"
 
+#include "G4LogicalVolume.hh"
+
+#include "G4VPhysicalVolume.hh"
+
+#include "G4PVPlacement.hh"
+
+#include "G4Box.hh"
+
+#include "G4Tubs.hh"
+
+#include "G4PVReplica.hh"
+
+#include "G4ExtrudedSolid.hh"
+
+#include "G4PhysicalVolumeStore.hh"
+
+#include "G4LogicalVolumeStore.hh"
+
+#include "G4SolidStore.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-SteppingAction::SteppingAction(DetectorConstruction* det,
+SteppingAction::SteppingAction(BCDetectorConstruction* det,
 			       EventAction* evt, HistoManager* histo)
  :detector(det), eventaction(evt), histoManager(histo) 
 { }
@@ -56,7 +78,9 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-  // get volume of the current step
+  // get volume of the current step. below links to bcdetectorconstruction.hh
+  // make sure names are correct other wise getradiator() wont work.
+
   G4VPhysicalVolume* volume 
   = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
   
@@ -66,17 +90,30 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4double stepl = 0.;
   if (aStep->GetTrack()->GetDefinition()->GetPDGCharge() != 0.)
     stepl = aStep->GetStepLength();
-      
-  if (volume == detector->GetRadiator()) eventaction->AddRad(edep,stepl);
-  if (volume == detector->GetElectronDump()) eventaction->AddElectronDump(edep,stepl);
+
+// old      
+//  if (volume == detector->GetRadiator()) eventaction->AddRad(edep,stepl);
+//  if (volume == detector->GetElectronDump()) eventaction->AddElectronDump(edep,stepl);
+// new
+
+  if (volume == Radiator) eventaction->AddRad(edep,stepl);
+  if (volume == ElectronDump) eventaction->AddElectronDump(edep,stepl);
   
   //////
 
   // Save electrons that leave Radiator
 
   if (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) {
-    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetRadiator()) {
+
+// original 
+//    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetRadiator()) {
+//     
+// new 
+
+    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == Radiator) {
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName()== "e-")
+
+
 	{
 	  
 	  G4double eelectron = 0.;
@@ -114,7 +151,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // Save gammas that enter the Bubble Chamber
 
   if (aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary) {
-    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetBubble()) {
+// old
+//    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetBubble()) {
+// new
+      if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == Bubble) {
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName()== "gamma")
 	{
 	  
@@ -148,7 +188,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // Print the alpha particle
 
-    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetBubble()) {
+// old
+//    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == detector->GetBubble()) {
+    if (aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume() == Bubble) {
       if (aStep->GetTrack()->GetDynamicParticle()->GetDefinition()->GetParticleName()== "alpha")
     	{
     	  G4cout

@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
 <gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
       xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
-      <!-- include GDML namespace -->
-      <!-- XML Schema instance Namespace -->
-      <!-- GDML Schema Location -->
 
 
 <!--
 /***********************************************************
-version 6-24 12:55
+version 7/3
+
+updated structure of volumes so they are combined as units instead of individual
+ parts of whole object. for instance Cu mount is now one phys vol. adding aux 
+ properties as well.
 
 Programmer: Darren
 Purpose:
 
-To define the Bubble Chamber and all of its components: Al block, Bubble, Flanges, Plugs, Bubble Base, Cu Ports, and mounts.
+To define the Bubble Chamber and all of its components: Al block, Bubble, 
+Flanges, Plugs, Bubble Base, Cu Ports, and mounts.
  
-*****Check to make sure this is Al, in step file it is listed as steel but Riad wants all Al I thought*****
+*****Check to make sure this is Al, in step file it is listed as steel but 
+Riad wants all Al I thought*****
 
-Uses the HMolPolHTargetVolume.gdml by Valerie, remoll simulation, gdml and geant4 user manual as guides
+Uses the HMolPolHTargetVolume.gdml by Valerie, remoll simulation, gdml and 
+geant4 user manual as guides
 
-Combined the individual files into one to avoid the overlapping and to make it easier to combine with the other objects (coming soon) along the beam line into a mother volume.
+Combined the individual files into one to avoid the overlapping and to make 
+it easier to combine with the other objects (coming soon) along the beam line 
+into a mother volume.
 
-!!! note materials here have the wrong values. I just used pre made gdml file from geant4 and changed the names to match ours in order to test to make sure the geometry is correct. So need to correct !!!!!
+!!! note materials have been corrected and input here !!!!!
 
 *********************************************************/
 -->
@@ -42,23 +46,24 @@ Combined the individual files into one to avoid the overlapping and to make it e
  	<constant name="PI" value="1.*pi"/>
  	<constant name="ThreeHalfPI" value="3.*pi/2."/>
 
-	<!-- Quantities such as length and angle for solids are 	Defined here -->
+	<!-- Quantities such as length and angle for solids are Defined here -->
 
 <!-- lengths for logical volume dimensions, box -->
 
-	<quantity name="logicalVol_Z" 
+	<quantity name="logicalVol_ZY" 
 	      type="length" 
-	      value = "200" 
+	      value = "355.7" 
 	      unit = "cm" />
 
-      <quantity name="logicalVol_XY" 
+      <quantity name="logicalVol_X" 
 	      type="length" 
-	      value = "50" 
+	      value = "431.9" 
 	      unit = "cm" />
 
 <!-- Defining physical volume dimensions -->
 
-<!-- Al block created by subtracting tubes from center should give us the correct shape for the Al shell -->
+<!-- Al block created by subtracting tubes from center should give us 
+the correct shape for the Al shell -->
 
 
  <!-- Al block -->
@@ -120,7 +125,8 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 <!-- Insert from component file follows -->
 
-<!-- Flanges will be tubes where most quantities are the same so will reuse but add a rotate command -->
+<!-- Flanges will be tubes where most quantities are the same so will reuse 
+but add a rotate command -->
  
 	
  <!-- Min and max for flange(outer part) and back plug radius  -->
@@ -174,7 +180,8 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
  <!-- end flanges-->
 
-<!-- Bubble (cartesian lengths halved), can also reuse some quantities from flanges -->
+<!-- Bubble (cartesian lengths halved), can also reuse some quantities 
+from flanges -->
  <!-- -->
  <!-- c2 -->
 	<quantity name="BubbleCylinderTop_Z_Length" 
@@ -414,12 +421,6 @@ Combined the individual files into one to avoid the overlapping and to make it e
       		z="0.0" 
       		unit="mm"/>
 
-	<position name="BubbleC2_Position" 
-      		x="64.4"
-      		y="0.0" 
-      		z="0.0" 
-      		unit="mm"/>
-
 	<position name="BubbleC1_Position" 
       		x="32.6"
       		y="0.0" 
@@ -428,6 +429,12 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 	<position name="BubbleTop_Position" 
       		x="86.7"
+      		y="0.0" 
+      		z="0.0" 
+      		unit="mm"/>
+
+	<position name="UnionBubble_Position" 
+      		x="-22.3"
       		y="0.0" 
       		z="0.0" 
       		unit="mm"/>
@@ -444,6 +451,17 @@ Combined the individual files into one to avoid the overlapping and to make it e
 	
 <!-- !!!!!! postions relative to origin in block frame -->	
 
+	<position name="Mount_Position" 
+	      x="0.0"
+	      y="0.0" 
+	      z="19.1" 
+	      unit="mm"/>
+	<position name="EndPort_Position" 
+	      x="0.0"
+	      y="0.0" 
+	      z="-52.4" 
+	      unit="mm"/>
+
 	<position name="CuPortIn_Position" 
 	      x="76.3"
 	      y="0.0" 
@@ -456,31 +474,6 @@ Combined the individual files into one to avoid the overlapping and to make it e
 	      z="76.2" 
 	      unit="mm"/>
 
-	<position name="CuPortMountIn_Position" 
-	      x="76.3"
-	      y="0.0" 
-	      z="-95.3" 
-	      unit="mm"/>
-
-	<position name="CuPortMountOut_Position" 
-	      x="76.3"
-	      y="0.0" 
-	      z="95.3" 
-	      unit="mm"/>
-
-	<position name="CuPortEndIn_Position" 
-	      x="76.3"
-	      y="0.0" 
-	      z="-27" 
-	      unit="mm"/>
-	<position name="CuPortEndOut_Position" 
-	      x="76.3"
-	      y="0.0" 
-	      z="27" 
-	      unit="mm"/>
-
-
-
 <!-- rotations to align flanges with proper axis -->
 <!-- rotate around the x axis by halfpi, similairy for y -->
 
@@ -488,7 +481,7 @@ Combined the individual files into one to avoid the overlapping and to make it e
 	<rotation name="rotateonXCamera" x="HALFPI"/>
  	<rotation name="rotateonXSide" x="ThreeHalfPI"/>  
 	<rotation name="rotateonYTop" y="HALFPI"/> 
-
+	<rotation name="rotateXpi" x="PI"/>
 
 
 <!-- rotations which will be used to subtract out the tubes -->
@@ -505,37 +498,167 @@ Combined the individual files into one to avoid the overlapping and to make it e
 <!-- the values below for our materials are not even close to being correct just used arbitrary values as explained in intro, need to fixxxxxxxx -->
 
 
-<materials>
-    <material Z="13" name="G4_GLASS_PLATE" state="solid">
+  <materials>
+ <!-- Al --> 
+    <material Z="13" name="Aluminum" state="solid">
       <MEE unit="eV" value="166"/>
-      <D unit="g/cm3" value="2.7"/>
-      <atom unit="g/mole" value="26.98"/>
+      <D unit="g/cm3" value="2.699"/>
+      <atom unit="g/mole" value="26.9815"/>
     </material>
-    <material Z="54" name="SuperHeatLiquid" state="gas">
-      <T unit="K" value="293.15"/>
-      <MEE unit="eV" value="482"/>
-      <D unit="g/cm3" value="0.005458"/>
-      <atom unit="g/mole" value="131.29"/>
+<!-- Cu -->
+    <isotope N="63" Z="29" name="Cu63_29">
+      <atom unit="g/mole" value="62.9296"/>
+    </isotope>
+    <isotope N="65" Z="29" name="Cu65_29">
+      <atom unit="g/mole" value="64.9278"/>
+    </isotope>
+    <element name="Cu">
+      <fraction n="0.6917" ref="Cu63_29"/>
+      <fraction n="0.3083" ref="Cu65_29"/>
+    </element>
+    <material name="Copper" state="solid">
+      <MEE unit="eV" value="322"/>
+      <D unit="g/cm3" value="8.96"/>
+      <fraction n="1" ref="Cu"/>
     </material>
-<element Z="7" name="Nitrogen0x8e9030">
-      <atom unit="g/mole" value="14.01"/>
+<!-- Galactic, was set as material of bubble in original example, why? -->
+    <isotope N="1" Z="1" name="H1_1">
+      <atom unit="g/mole" value="1.00782503081372"/>
+    </isotope>
+    <isotope N="2" Z="1" name="H2_1">
+      <atom unit="g/mole" value="2.01410199966617"/>
+    </isotope>
+    <element name="H">
+      <fraction n="0.999885" ref="H1_1"/>
+      <fraction n="0.000115" ref="H2_1"/>
     </element>
-    <element Z="8" name="Oxygen0x8e91e0">
-      <atom unit="g/mole" value="16"/>
+    <material name="Galactic" state="gas">
+      <T unit="K" value="2.73"/>
+      <P unit="pascal" value="3e-18"/>
+      <MEE unit="eV" value="21.8"/>
+      <D unit="g/cm3" value="1e-25"/>
+      <fraction n="1" ref="H"/>
+    </material>
+<!-- Air -->
+    <isotope N="14" Z="7" name="N140x19d6f20">
+      <atom unit="g/mole" value="14.0031"/>
+    </isotope>
+    <isotope N="15" Z="7" name="N150x19d7370">
+      <atom unit="g/mole" value="15.0001"/>
+    </isotope>
+    <element name="N">
+      <fraction n="0.99632" ref="N140x19d6f20"/>
+      <fraction n="0.00368" ref="N150x19d7370"/>
     </element>
-    <element Z="7" name="G4_Al">
-      <atom unit="g/mole" value="14.01"/>
+    
+    <isotope N="16" Z="8" name="O160x23329a0">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O170x2332a30">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O180x2332ac0">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O160x23329a0"/>
+      <fraction n="0.00038" ref="O170x2332a30"/>
+      <fraction n="0.00205" ref="O180x2332ac0"/>
     </element>
-    <element Z="8" name="G4_Cu">
-      <atom unit="g/mole" value="16"/>
-    </element>
-    <material name="G4_AIR" state="gas">
+
+    <material name="Air" state="gas">
       <MEE unit="eV" value="85.7030667332999"/>
       <D unit="g/cm3" value="0.00129"/>
-      <fraction n="0.7" ref="Nitrogen0x8e9030"/>
-      <fraction n="0.3" ref="Oxygen0x8e91e0"/>
+      <fraction n="0.7" ref="N"/>
+      <fraction n="0.3" ref="O"/>
     </material>
-    
+
+<!-- Glass, not the exact kind of glass, probably need to change, pulled from G4_glass_plate -->
+
+    <isotope N="23" Z="11" name="Na230x2334870">
+      <atom unit="g/mole" value="22.9898"/>
+    </isotope>
+
+    <isotope N="28" Z="14" name="Si280x2335fe0">
+      <atom unit="g/mole" value="27.9769"/>
+    </isotope>
+    <isotope N="29" Z="14" name="Si290x2334040">
+      <atom unit="g/mole" value="28.9765"/>
+    </isotope>
+    <isotope N="30" Z="14" name="Si300x2336160">
+      <atom unit="g/mole" value="29.9738"/>
+    </isotope>
+
+    <isotope N="40" Z="20" name="Ca400x2336420">
+      <atom unit="g/mole" value="39.9626"/>
+    </isotope>
+    <isotope N="42" Z="20" name="Ca420x23364b0">
+      <atom unit="g/mole" value="41.9586"/>
+    </isotope>
+    <isotope N="43" Z="20" name="Ca430x2336540">
+      <atom unit="g/mole" value="42.9588"/>
+    </isotope>
+    <isotope N="44" Z="20" name="Ca440x23365e0">
+      <atom unit="g/mole" value="43.9555"/>
+    </isotope>
+    <isotope N="46" Z="20" name="Ca460x2336650">
+      <atom unit="g/mole" value="45.9537"/>
+    </isotope>
+    <isotope N="48" Z="20" name="Ca480x2336690">
+      <atom unit="g/mole" value="47.9525"/>
+    </isotope>
+
+    <element name="Na">
+      <fraction n="1" ref="Na230x2334870"/>
+    </element>
+    <element name="Si">
+      <fraction n="0.922296077703922" ref="Si280x2335fe0"/>
+      <fraction n="0.0468319531680468" ref="Si290x2334040"/>
+      <fraction n="0.0308719691280309" ref="Si300x2336160"/>
+    </element>
+    <element name="Ca">
+      <fraction n="0.96941" ref="Ca400x2336420"/>
+      <fraction n="0.00647" ref="Ca420x23364b0"/>
+      <fraction n="0.00135" ref="Ca430x2336540"/>
+      <fraction n="0.02086" ref="Ca440x23365e0"/>
+      <fraction n="4e-05" ref="Ca460x2336650"/>
+      <fraction n="0.00187" ref="Ca480x2336690"/>
+    </element>
+    <material name="Glass" state="solid">
+      <MEE unit="eV" value="145.4"/>
+      <D unit="g/cm3" value="2.4"/>
+      <fraction n="0.45980045980046" ref="O"/>
+      <fraction n="0.0964410964410964" ref="Na"/>
+      <fraction n="0.336553336553337" ref="Si"/>
+      <fraction n="0.107205107205107" ref="Ca"/>
+    </material>
+
+<!-- SuperHeatLiquid -->
+
+    <material name="Nitrous_Oxide" state="gas">
+      <MEE unit="eV" value="84.9"/>
+      <D unit="g/cm3" value="0.00183094"/>
+      <fraction n="0.636483" ref="N"/>
+      <fraction n="0.363517" ref="O"/>
+    </material>
+
+    <material Z="54" name="SuperHeatLiquid" state="gas">
+      <T unit="K" value="268.15"/>
+      <P unit="pascal" value="6079500"/>
+      <MEE unit="eV" value="84.9"/>
+      <D unit="g/cm3" value="0.846"/>
+      <fraction n="1" ref="Nitrous_Oxide"/>
+    </material>
+
+<!-- Water -->
+
+    <material name="Water" state="solid">
+      <MEE unit="eV" value="78"/>
+      <D unit="g/cm3" value="1"/>
+      <fraction n="0.111898477841067" ref="H"/>
+      <fraction n="0.888101522158933" ref="O"/>
+    </material>
+
   </materials>
  
 <!-- -->
@@ -550,9 +673,9 @@ Combined the individual files into one to avoid the overlapping and to make it e
 <!-- Define the logical volume contanier -->
 
 	<box name="logicalVol_solid" 
-		x="logicalVol_XY" 
-		y="logicalVol_XY" 
-		z="logicalVol_Z"/>
+		x="logicalVol_X" 
+		y="logicalVol_ZY" 
+		z="logicalVol_ZY"/>
 
 
 <!-- Define the physical volumes -->
@@ -695,6 +818,18 @@ Combined the individual files into one to avoid the overlapping and to make it e
 		starttheta="Bubble_StartTheta" 
 		deltatheta="Bubble_EndTheta"/>
 
+<!-- Define the union of the bubble -->
+
+<union name="BubbleGlass_solid">
+<first ref="BubbleTop_Sphere"/> <second ref="BubbleC2_tube"/>
+<positionref ref="UnionBubble_Position"/> <rotationref ref="rotateonYTop"/>
+</union>
+
+<union name="BubbleInside_solid">
+<first ref="BubbleTopInside_Sphere"/> <second ref="BubbleC2Inside_tube"/>
+<positionref ref="UnionBubble_Position"/> <rotationref ref="rotateonYTop"/>
+</union>
+
 	<!-- Define Cu port on Bubble Chamber -->
 	    <tube name="CuPort_tube" 
 	      rmin="CuPort_MinRadius" 
@@ -703,15 +838,6 @@ Combined the individual files into one to avoid the overlapping and to make it e
 	      startphi="CuPort_StartPhi" 
 	      deltaphi="CuPort_EndPhi"/> 
 	  
-	    <!-- Define the inner beam line cavity in copper port (note: could have used subtract command too) 
-	    <tube name="in_port_air_tube" 
-	      rmin="in_port_air_MinRadius" 
-	      rmax="in_port_air_MaxRadius"
-	      z="CuPort_Length" 
-	      startphi="CuPort_StartPhi" 
-	      deltaphi="CuPort_EndPhi"/>   
-	-->
-
 	<!-- Define the copper port mount cylinder -->
 	    <tube name="CuPortMount_tube" 
 	      rmin="CuPortMount_MinRadius" 
@@ -728,17 +854,31 @@ Combined the individual files into one to avoid the overlapping and to make it e
 	      startphi="CuPort_StartPhi" 
 	      deltaphi="CuPort_EndPhi"/> 	
 
+<!-- Define the union of the Cu ports -->
+
+<union name="CuPort1_solid">
+<first ref="CuPort_tube"/> <second ref="CuPortMount_tube"/>
+<positionref ref="Mount_Position"/> 
+</union>
+
+<union name="CuPort_solid">
+<first ref="CuPort1_solid"/> <second ref="CuPortEnd_tube"/>
+<positionref ref="EndPort_Position"/>
+</union>
+
+
 	</solids>
 
   <structure>
   
-<!-- Define structure. combines everything we have so far. physical volumes are put into logical volumes with positions, rotations..  -->
+<!-- Define structure. combines everything we have so far. physical 
+volumes are put into logical volumes with positions, rotations..  -->
 
 	    <!-- Define the physical volumes -->
 	    <volume name="AlShell"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="AlShell_solid"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
+	      <auxiliary auxtype="Color" auxvalue="grey"/>
 	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
 	    </volume>
  
@@ -746,47 +886,47 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 <!-- Beamline -->
     	<volume name="BeamFlange"> 
-      		<materialref ref="G4_Al"/>
+      		<materialref ref="Aluminum"/>
       		<solidref ref="BeamFlange_tube"/>
-	      	<auxiliary auxtype="Color" auxvalue="blue"/>
-	      	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
     	</volume>
  
 	<volume name="BeamPlug"> 
-	      	<materialref ref="G4_Al"/>
+	      	<materialref ref="Aluminum"/>
 	      	<solidref ref="BeamPlug_tube"/>
-	      	<auxiliary auxtype="Color" auxvalue="blue"/>
-	      	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
     	</volume>
 
 <!-- Sides -->
 	<volume name="SideFlange"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="SideFlange_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
     	</volume>
  
 	<volume name="SidePlug"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="SidePlug_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
 	    </volume>
 
 <!-- top -->
 	<volume name="TopFlange"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="TopFlange_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.5"/>
 	    </volume>
  
 	<volume name="TopPlug"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="TopPlug_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      	<auxiliary auxtype="Color" auxvalue="grey"/>
+	      	<auxiliary auxtype="Alpha" auxvalue="0.6"/>
     	</volume>
 
 <!-- end flange and plug volume def -->
@@ -794,89 +934,50 @@ Combined the individual files into one to avoid the overlapping and to make it e
 <!-- Define bubble volume def -->
 
 	<volume name="BubbleBase"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="BubbleBase_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    	</volume>
+	      <auxiliary auxtype="Color" auxvalue="black"/>
+	    	</volume>
  
 	<volume name="BubbleC1"> 
-	      <materialref ref="G4_Al"/>
+	      <materialref ref="Aluminum"/>
 	      <solidref ref="BubbleC1_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      <auxiliary auxtype="Color" auxvalue="black"/>
     	</volume>
 
-
-	<volume name="BubbleC2"> 
-	      <materialref ref="G4_GLASS_PLATE"/>
-	      <solidref ref="BubbleC2_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="red"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    	</volume>
-
-	<volume name="BubbleC2Inside"> 
+	<volume name="BubbleInsideVol"> 
 	      <materialref ref="SuperHeatLiquid"/>
-	      <solidref ref="BubbleC2Inside_tube"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    	</volume>
-
-	<volume name="BubbleTop"> 
-	      <materialref ref="G4_GLASS_PLATE"/>
-	      <solidref ref="BubbleTop_Sphere"/>
-	      <auxiliary auxtype="Color" auxvalue="red"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    	</volume>
-
-	<volume name="BubbleTopInside"> 
-	      <materialref ref="SuperHeatLiquid"/>
-	      <solidref ref="BubbleTopInside_Sphere"/>
-	      <auxiliary auxtype="Color" auxvalue="blue"/>
-	      <auxiliary auxtype="Alpha" auxvalue="0.3"/>
+	      <solidref ref="BubbleInside_solid"/>
+	      <auxiliary auxtype="Color" auxvalue="cyan"/>
+	      <auxiliary auxtype="Alpha" auxvalue="0.8"/>
 	    </volume>
-
+	    
+	<volume name="BubbleGlassVol"> 
+	      <materialref ref="Glass"/>
+	      <solidref ref="BubbleGlass_solid"/>
+	      <auxiliary auxtype="Color" auxvalue="white"/>
+	      <auxiliary auxtype="Alpha" auxvalue="0.2"/>
+    	</volume>
+    	
   <!-- Cuport volumes -->
    <!-- Define the port -->
-    <volume name="CuPortBase"> 
-      <materialref ref="G4_Cu"/>
-      <solidref ref="CuPort_tube"/>
-      <auxiliary auxtype="Color" auxvalue="green"/>
-	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
+    <volume name="CuPortBaseVol"> 
+      <materialref ref="Copper"/>
+      <solidref ref="CuPort_solid"/>
+      <auxiliary auxtype="Color" auxvalue="yellow"/>
     </volume>
   
-    <!-- inner volume (fixed)(check if this structure is correct)(fixed) 
-    <volume name="in_port_air">
-      <materialref ref="G4_AIR"/>
-      <solidref ref="in_port_air_tube"/>
-    </volume>
--->
 
-<!-- Cu Port Mount -->
-    <volume name="CuPortMount">
-      <materialref ref="G4_Cu"/>
-      <solidref ref="CuPortMount_tube"/>
-	<auxiliary auxtype="Color" auxvalue="green"/>
- 	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    </volume>
-
-<!-- Cu end cap  -->
-    <volume name="CuPortEnd">
-      <materialref ref="G4_Cu"/>
-      <solidref ref="CuPortEnd_tube"/>
-	<auxiliary auxtype="Color" auxvalue="green"/>
- 	<auxiliary auxtype="Alpha" auxvalue="0.3"/>
-    </volume>
-
-
+<!-- --> 
+<!-- --> 
 <!-- Define the logical volumes --> 
- <volume name="logicalVol">
-      <materialref ref="G4_AIR"/>
+ <volume name="BubbleChamberVol">
+      <materialref ref="Air"/>
       <solidref ref="logicalVol_solid"/>
 
 
  <!-- Define the physical volumes -->
-      <physvol>
+      <physvol name="BCShell">
         <volumeref ref="AlShell"/>
         <positionref ref="center"/>
       </physvol>
@@ -885,37 +986,25 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 <!-- Bubble --> 
 
-      <physvol>
-        <volumeref ref="BubbleTopInside"/>
+      <physvol name="Bubble">
+        <volumeref ref="BubbleInsideVol"/>
         <positionref ref="BubbleTop_Position"/>
       <rotationref ref="identity"/>
       </physvol>
 
-	<physvol>
-        <volumeref ref="BubbleC2Inside"/>
-        <positionref ref="BubbleC2_Position"/>
-      <rotationref ref="rotateonYTop"/>
-      </physvol>
-
-	<physvol>
-        <volumeref ref="BubbleTop"/>
+      <physvol name="BubbleGlass">
+        <volumeref ref="BubbleGlassVol"/>
         <positionref ref="BubbleTop_Position"/>
       <rotationref ref="identity"/>
       </physvol>
 
-	<physvol>
-        <volumeref ref="BubbleC2"/>
-        <positionref ref="BubbleC2_Position"/>
-      <rotationref ref="rotateonYTop"/>
-      </physvol>
-
-	<physvol>
+	<physvol name="BubbleSupport">
         <volumeref ref="BubbleC1"/>
         <positionref ref="BubbleC1_Position"/>
       <rotationref ref="rotateonYTop"/>
       </physvol>
 
-      <physvol>
+      <physvol name="BubbleBase">
         <volumeref ref="BubbleBase"/>
         <positionref ref="BubbleBase_Position"/>
       <rotationref ref="rotateonYTop"/>
@@ -925,13 +1014,13 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 <!-- Flanges and Plugs --> 
  <!-- Entrance physical volume (along Z so no rotation needed) -->
-      <physvol>
+      <physvol name="FlangeBeamEntrance">
         <volumeref ref="BeamFlange"/>
         <positionref ref="EntranceFlange_Position"/>
       <rotationref ref="identity"/>
       </physvol>
 
-	<physvol>
+	<physvol name="PlugBeamEntrance">
         <volumeref ref="BeamPlug"/>
         <positionref ref="EntrancePlug_Position"/>
       <rotationref ref="identity"/>
@@ -939,52 +1028,52 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
 
 <!-- Exit physical volume (along Z so no rotation needed) -->
-      <physvol>
+      <physvol name="FlangeBeamExit">
         <volumeref ref="BeamFlange"/>
         <positionref ref="ExitFlange_Position"/>
       <rotationref ref="identity"/>
       </physvol>
 
-	<physvol>
+	<physvol name="PlugBeamExit">
         <volumeref ref="BeamPlug"/>
         <positionref ref="ExitPlug_Position"/>
       <rotationref ref="identity"/>
       </physvol>
 
 <!-- Camera physical volume (rotation needed 1/2 pi around x axis) -->
-      <physvol>
+      <physvol name="FlangeCameraSide">
         <volumeref ref="SideFlange"/>
         <positionref ref="CameraFlange_Position"/>
       <rotationref ref="rotateonXCamera"/>
       </physvol>
 
-	<physvol>
+	<physvol name="PlugCameraSide">
         <volumeref ref="SidePlug"/>
         <positionref ref="CameraPlug_Position"/>
       <rotationref ref="rotateonXCamera"/>
       </physvol>
 
 <!-- Side (opposite Camera) physical volume (rotation needed 3/2 pi around x axis) -->
-      <physvol>
+      <physvol name="FlangeLeftSide">
         <volumeref ref="SideFlange"/>
         <positionref ref="SideFlange_Position"/>
       <rotationref ref="rotateonXSide"/>
       </physvol>
 
-	<physvol>
+	<physvol name="PlugLeftSide">
         <volumeref ref="SidePlug"/>
         <positionref ref="SidePlug_Position"/>
       <rotationref ref="rotateonXSide"/>
       </physvol>
 
 <!-- Camera physical volume (rotation needed 1/2 pi around x axis) -->
-      <physvol>
+      <physvol name="FlangeTop">
         <volumeref ref="TopFlange"/>
         <positionref ref="TopFlange_Position"/>
       <rotationref ref="rotateonYTop"/>
       </physvol>
 
-	<physvol>
+	<physvol name="PlugTop">
         <volumeref ref="TopPlug"/>
         <positionref ref="TopPlug_Position"/>
       <rotationref ref="rotateonYTop"/>
@@ -995,60 +1084,31 @@ Combined the individual files into one to avoid the overlapping and to make it e
 
  <!-- cuport physical volumes -->
 
-<physvol>
-        <volumeref ref="CuPortBase"/>
+<physvol name="CuPortExit">
+        <volumeref ref="CuPortBaseVol"/>
         <positionref ref="CuPortOut_Position"/>
       </physvol>
 
-<physvol>
-        <volumeref ref="CuPortBase"/>
-        <positionref ref="CuPortIn_Position"/>
+<physvol name="CuPortEntrance">
+        <volumeref ref="CuPortBaseVol"/>
+        <positionref ref="CuPortIn_Position"/> 
+        <rotationref ref="rotateXpi"/>
       </physvol>
 
-<!--
-<physvol>
-        <volumeref ref="in_port_air"/>
-        <positionref ref="CuPortIn_Position"/>
-      </physvol> 
-
-
-<physvol>
-        <volumeref ref="in_port_air"/>
-        <positionref ref="CuPortOut_Position"/>
-      </physvol> 
--->
-
-<physvol>
-        <volumeref ref="CuPortMount"/>
-        <positionref ref="CuPortMountOut_Position"/>
-      </physvol>
-
-<physvol>
-        <volumeref ref="CuPortMount"/>
-        <positionref ref="CuPortMountIn_Position"/>
-      </physvol>
-
-<physvol>
-        <volumeref ref="CuPortEnd"/>
-        <positionref ref="CuPortEndOut_Position"/>
-      </physvol>
-
-<physvol>
-        <volumeref ref="CuPortEnd"/>
-        <positionref ref="CuPortEndIn_Position"/>
-      </physvol>
 <!-- end physical volumes -->
-
+      	<auxiliary auxtype="Visibility" auxvalue="hide"/>
     </volume>
+
 
   </structure>
   <!-- Connects this to mother files or world file by giving world ref to this file i.e. gives the logical volume  -->
   
 	<setup name="Default" version="1.0">
-    		<world ref="logicalVol"/>
+    		<world ref="BubbleChamberVol"/>
  	 	</setup>
 
 </gdml>
+
 
 
 

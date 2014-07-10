@@ -16,7 +16,72 @@ $Id: README 49035 2011-03-31 10:21:28Z gcosmo $
  1- Detector description:
  -----------------------
  
- A radiator, collimator and a cell.
+ $Id: README 49035 2011-03-31 10:21:28Z gcosmo $
+--------------------------------------------------
+
+     =========================================================
+     Geant4 - an Object-Oriented Toolkit for Simulation in HEP
+     =========================================================
+
+                            BubbleEx
+                            -------
+ This example shows the usage of histogram and tuple manipulations using 
+ ROOT system. All analysis manipulations (histo booking, filling, saving 
+ histos in a file, etc...) are located in one class : HistoManager.
+ 
+ The example has a setup of the Bubble Chamber.
+	
+ 1- Detector description:
+ -----------------------
+ 
+ BubbleChamber (BCshell, Bubble, liquid inside bubble, flanges, ports, plugs, bubble base), beamline, radiator, collimator, and photon dump. 
+
+	
+ 	    
+ 2- An event: PrimaryGeneratorAction
+ ------------------------------------
+ 
+ The primary kinematic consists of a single particle which hits the
+ radiator perpendicular to the input face. The type of the particle
+ and its energy are set in the PrimaryGeneratorAction class, and can
+ be changed via the G4 build-in commands of ParticleGun class.
+ 	
+
+ 3- Histograms:
+ ------------- 
+ To produce histograms, ROOT system must be installed
+    
+ BubbleEx can produce 12 histograms and 3 Ntuples.
+   
+ These histos are booked in HistoManager and filled from EventAction.
+ 
+ One can control the name of the histograms file :
+ default name     : BubbleEx
+ format : root
+ 
+ See HistoManager constructor
+    
+ Please install ROOT before enable histograming. 
+ http://root.cern.ch
+  
+ 3- Histograms:
+ ------------- 
+
+In vis.mac, use this open statement to create a .heprep file suitable for
+# viewing in HepRApp:
+/vis/open HepRepFile
+#
+
+To view:
+ java -jar HepRApp.jar G4Data0.heprep
+
+
+In vis.mac, use this open statement to create a .prim file suitable for
+# viewing in DAWN:
+#/vis/open DAWNFILE
+
+To view:
+ dawn  g4_00.prim
 	
  	    
  2- An event: PrimaryGeneratorAction

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+<!--
+/***********************************************************
+updated 7/3
+
+
+Programmer: Darren
+Purpose:
+
+To define the BeamPipe in the BubbleEx simulation.
+
+need correct values and geometry here, plus position in world file
+
+*********************************************************/
+-->
+ 
+ 
+ <define>
+
+     <constant name = "TWOPI" value = "2.*pi"/>
+
+    <quantity name="pipevol_z" 
+      value = "30.5" 
+      unit = "cm" />    
+    <quantity name="pipevol_xy" 
+      value = "6.5" 
+      unit = "cm" />  
+
+    <!-- length of pipe -->
+    <quantity name="pipe_Length" 
+      value = "30.0" 
+      unit = "cm" />
+
+    <!-- radius min and max of pipe -->
+    <quantity name="pipe_Rmin" 
+      value = "2.9" 
+      unit = "cm" />
+    <quantity name="pipe_Rmax" 
+      value = "3.0" 
+      unit = "cm" />
+      
+    <!-- starting and ending phi angles -->
+    <quantity name="pipe_StartPhi" 
+      type="angle" 
+      value = "0" 
+      unit = "rad"/> 
+    <quantity name="pipe_EndPhi" 
+      type="angle" 
+      value = "TWOPI" 
+      unit = "rad"/>     
+    
+    <!-- define positions of the target in this file -->
+    <position name="pipe_Position" 
+      x="0.0"
+      y="0.0" 
+      z="0.0" 
+      unit="cm"/>
+
+  </define>
+  
+  <materials>
+ <!-- Al --> 
+    <material Z="13" name="Aluminum" state="solid">
+      <MEE unit="eV" value="166"/>
+      <D unit="g/cm3" value="2.699"/>
+      <atom unit="g/mole" value="26.9815"/>
+    </material>
+  </materials>  
+
+  <solids>
+    <!-- Define the pipe solid -->
+    	<tube name="pipe_tube" 
+      		rmin="pipe_Rmin" 
+      		rmax="pipe_Rmax"
+      		z="pipe_Length" 
+      		startphi="pipe_StartPhi" 
+      		deltaphi="pipe_EndPhi"/>    
+
+  </solids>
+  
+   <structure>
+<!-- might need a seperate logical volume -->
+
+    <volume name="BeamPipeVol"> 
+      <materialref ref="Aluminum"/>
+      <solidref ref="pipe_tube"/>
+      <auxiliary auxtype="Color" auxvalue="blue"/>
+    </volume>
+
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="BeamPipeVol"/>
+  </setup>
+
+</gdml>
+  

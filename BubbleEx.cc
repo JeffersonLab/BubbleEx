@@ -24,9 +24,11 @@
 // ********************************************************************
 //
 //
-// $Id: AnaEx02.cc 49035 2011-03-31 10:21:28Z gcosmo $
-// GEANT4 tag $Name: geant4-09-04 $
-//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//  
+//  last updated 707/07/2014 11:10:13 PM 
+//  by darren
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -34,7 +36,7 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
-#include "DetectorConstruction.hh"
+#include "BCDetectorConstruction.hh"
 #include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
@@ -60,7 +62,7 @@ int main(int argc,char** argv)
 
   // Set mandatory initialization classes
   //
-  DetectorConstruction* detector = new DetectorConstruction;
+  BCDetectorConstruction* detector = new BCDetectorConstruction;
   runManager->SetUserInitialization(detector);
   //
   PhysicsList* physics = new PhysicsList;

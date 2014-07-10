@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdml xmlns:gdml="http://cern.ch/2001/Schemas/GDML" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:noNamespaceSchemaLocation="schema/gdml.xsd">
+
+<!--
+/***********************************************************
+updated 7/7
+
+Programmer: Darren Getts
+Purpose:
+
+ File to compile the different daughter geometries for bubble chamber. Used mollerMother.gdml file from remoll simulation as template.
+
+to do: 
+
+some geometry hasnt been set to correct values or shape do to not having information. still waiting for step file. the radiator, collimator, beamline, and dump need to be adjusted.
+
+need tp add sweep magnet and electron dump, update positions when those gdml files have been created
+
+*********************************************************/ -->
+
+<!-- -->
+<!-- -->
+
+
+
+<define>
+
+     <position name="Center" x="0" y="0" z="0"/>
+     <rotation name="identity"/>
+
+<quantity name="WorldZ_Length" 
+      type="length" 
+      value = "2000.0"                   
+      unit = "cm" />
+<quantity name="WorldXY_Length" 
+      type="length" 
+      value = "500.0"                   
+      unit = "cm" />
+
+	<!-- positions of sub volumes all are along the z axis -->
+	<!-- BeamPipe -->
+	<position name="BeamPipe_pos" 
+		x="0" 
+		y="0" 
+		z="-150"
+		unit="mm"/>
+	<!-- -->
+	<position name="Radiator_pos" 
+		x="0" 
+		y="0" 
+		z="65.495"
+		unit="mm"/>
+	<!-- -->
+	<position name="PhotonCollimator_pos" 
+		x="0" 
+		y="0" 
+		z="207.2"
+		unit="mm"/>
+	<!-- -->
+	<position name="BubbleChamber_pos" 
+		x="-76.3" 
+		y="0" 
+		z="461.25"
+		unit="mm"/>
+	<!-- -->
+	<position name="PhotonDump_pos" 
+		x="0" 
+		y="0" 
+		z="1100"
+		unit="mm"/>
+      
+</define>
+
+
+ <materials>
+<!-- Air -->
+    <isotope N="14" Z="7" name="N140x19d6f20">
+      <atom unit="g/mole" value="14.0031"/>
+    </isotope>
+    <isotope N="15" Z="7" name="N150x19d7370">
+      <atom unit="g/mole" value="15.0001"/>
+    </isotope>
+    <element name="N">
+      <fraction n="0.99632" ref="N140x19d6f20"/>
+      <fraction n="0.00368" ref="N150x19d7370"/>
+    </element>
+    
+    <isotope N="16" Z="8" name="O160x23329a0">
+      <atom unit="g/mole" value="15.9949"/>
+    </isotope>
+    <isotope N="17" Z="8" name="O170x2332a30">
+      <atom unit="g/mole" value="16.9991"/>
+    </isotope>
+    <isotope N="18" Z="8" name="O180x2332ac0">
+      <atom unit="g/mole" value="17.9992"/>
+    </isotope>
+    <element name="O">
+      <fraction n="0.99757" ref="O160x23329a0"/>
+      <fraction n="0.00038" ref="O170x2332a30"/>
+      <fraction n="0.00205" ref="O180x2332ac0"/>
+    </element>
+
+    <material name="Air" state="gas">
+      <MEE unit="eV" value="85.7030667332999"/>
+      <D unit="g/cm3" value="0.00129"/>
+      <fraction n="0.7" ref="N"/>
+      <fraction n="0.3" ref="O"/>
+    </material>
+</materials> 
+
+<!-- Define the mother solid, a box to put everything in -->
+
+<solids>
+
+     <box name="Mother_box" 
+x="WorldXY_Length" 
+y="WorldXY_Length" 
+z="WorldZ_Length"/>
+
+</solids>
+
+<!-- Define the structure -->
+
+  <structure>
+
+    <volume name="logicalMother">
+      <materialref ref="Air"/>
+      <solidref ref="Mother_box"/>
+
+<!-- -->
+<!-- -->
+<!-- Linking files  
+
+-->
+
+<!-- !!!! check to see that paths are correct after implementing, currently have them set to be placed in folder geometry !!!!!!! -->
+
+      <physvol name="BeamPipe">
+      <file name="geometry/BeamPipe.gdml"/>
+      <positionref ref="BeamPipe_pos"/>
+      <rotationref ref="identity"/>
+      </physvol>
+       <physvol name="Radiator">
+      <file name="geometry/Radiator.gdml"/>
+      <positionref ref="Radiator_pos"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      <physvol name="PhotonCollimator">
+      <file name="geometry/PhotonCollimator.gdml"/>
+      <positionref ref="PhotonCollimator_pos"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      <physvol name="BubbleChamber">
+      <file name="geometry/BubbleChamber.gdml"/>
+      <positionref ref="BubbleChamber_pos"/>
+      <rotationref ref="identity"/>
+      </physvol>
+      <physvol name="PhotonDump">
+      <file name="geometry/PhotonDump.gdml"/>
+      <positionref ref="PhotonDump_pos"/>
+      <rotationref ref="identity"/>
+      </physvol>            
+      
+    </volume>
+
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="logicalMother"/>
+  </setup>
+
+</gdml>
